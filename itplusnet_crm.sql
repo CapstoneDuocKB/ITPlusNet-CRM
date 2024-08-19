@@ -2,129 +2,171 @@ CREATE DATABASE crm_itplusnet;
 
 USE crm_itplusnet;
 
-CREATE TABLE dificultad_soporte (
+CREATE TABLE dificultades_soporte (
   id CHAR(36) NOT NULL PRIMARY KEY,
   nombre varchar(20) NOT NULL,
   descripcion varchar(255) NULL,
   uf float NOT NULL
 );
 
-CREATE TABLE estado_soporte (
+CREATE TABLE estados_soporte (
   id CHAR(36) NOT NULL PRIMARY KEY,
   nombre VARCHAR(255) NOT NULL,
   descripcion VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE tipo_soporte (
+CREATE TABLE tipos_soporte (
   id CHAR(36) NOT NULL PRIMARY KEY,
   nombre  VARCHAR(255) NOT NULL,
   descripcion VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE region(
+CREATE TABLE regiones (
   id CHAR(36) NOT NULL PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE comuna(
+CREATE TABLE comunas (
   id CHAR(36) NOT NULL PRIMARY KEY,
   nombre VARCHAR(100) NOT NULL,
   region_id CHAR(36),
-  FOREIGN KEY (region_id) REFERENCES region(id)
+  FOREIGN KEY (region_id) REFERENCES regiones(id)
 );
 
-CREATE TABLE direccion(
+CREATE TABLE direcciones (
   id CHAR(36) NOT NULL PRIMARY KEY,
   calle VARCHAR(255) NOT NULL,
   numero VARCHAR(20) NOT NULL,
   comuna_id CHAR(36) NOT NULL,
-  FOREIGN KEY (comuna_id) REFERENCES comuna(id)
+  FOREIGN KEY (comuna_id) REFERENCES comunas(id)
 );
 
-CREATE TABLE sucursal(
-  id CHAR(36) NOT NULL PRIMARY KEY,
-  nombre VARCHAR(100) NOT NULL,
-  activa BOOLEAN,
-  direccion_id CHAR(36),
-  FOREIGN KEY (direccion_id) REFERENCES direccion(id)
-);
-
-CREATE TABLE bodega(
-  id CHAR(36) NOT NULL PRIMARY KEY,
-  nombre VARCHAR(100) NOT NULL,
-  activa BOOLEAN,
-  sucursal_id CHAR(36),
-  FOREIGN KEY (sucursal_id) REFERENCES sucursal(id)
-);
-
-CREATE TABLE empresa(
+CREATE TABLE empresas (
   id CHAR(36) NOT NULL PRIMARY KEY,
   rut VARCHAR(12) NOT NULL,
   nombre VARCHAR(50) NOT NULL,
   razon_social VARCHAR(150) NOT NULL,
   direccion_id CHAR(36) NOT NULL,
-  FOREIGN KEY (direccion_id) REFERENCES direccion(id),
+  FOREIGN KEY (direccion_id) REFERENCES direcciones(id),
   color VARCHAR(20) NOT NULL,
   ruta_logo VARCHAR(255) NOT NULL,
   activa BOOLEAN
 );
 
-CREATE TABLE usuario(
+CREATE TABLE sucursales (
   id CHAR(36) NOT NULL PRIMARY KEY,
-  rut VARCHAR(12) NOT NULL, 
-  hashed_password VARCHAR(255) NOT NULL,
-  nombre VARCHAR(255) NOT NULL,
-  correo VARCHAR(255) NOT NULL UNIQUE,
-  telefono VARCHAR(15),
+  nombre VARCHAR(100) NOT NULL,
+  activa BOOLEAN,
   direccion_id CHAR(36),
-  empresa_id CHAR(36),
-  FOREIGN KEY (empresa_id) REFERENCES empresa(id),
-  FOREIGN KEY (direccion_id) REFERENCES direccion(id),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  activo BOOLEAN
+  sucursal_id CHAR(36),
+  FOREIGN KEY (direccion_id) REFERENCES direcciones(id),
+  FOREIGN KEY (sucursal_id) REFERENCES sucursales(id)
 );
 
-CREATE TABLE soporte(  
+CREATE TABLE bodegas (
   id CHAR(36) NOT NULL PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  activa BOOLEAN,
+  sucursal_id CHAR(36),
+  FOREIGN KEY (sucursal_id) REFERENCES sucursales(id)
+);
+
+CREATE TABLE cajas (
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  nombre VARCHAR(100) NOT NULL,
+  activa BOOLEAN,
+  sucursal_id CHAR(36),
+  FOREIGN KEY (sucursal_id) REFERENCES sucursales(id)
+);
+-- Crear la tabla usuarios
+CREATE TABLE usuarios (
+    id CHAR(36) NOT NULL PRIMARY KEY,
+    rut VARCHAR(12) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    email_verified_at TIMESTAMP NULL,
+    password VARCHAR(255) NOT NULL,
+    remember_token VARCHAR(100) NULL,
+    telefono VARCHAR(15) NULL,
+    direccion_id CHAR(36) NULL,
+    empresa_id CHAR(36) NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    activo BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (direccion_id) REFERENCES direcciones(id),
+    FOREIGN KEY (empresa_id) REFERENCES empresas(id)
+);
+
+-- Crear la tabla password_reset_tokens
+CREATE TABLE password_reset_tokens (
+    email VARCHAR(255) NOT NULL PRIMARY KEY,
+    token VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NULL
+);
+
+-- Crear la tabla sessions
+CREATE TABLE sessions (
+    id VARCHAR(255) NOT NULL PRIMARY KEY,
+    user_id CHAR(36) NULL,
+    ip_address VARCHAR(45) NULL,
+    user_agent TEXT NULL,
+    payload LONGTEXT NOT NULL,
+    last_activity INT NOT NULL,
+    INDEX (user_id),
+    INDEX (last_activity),
+    FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE SET NULL
+);
+
+CREATE TABLE soportes (
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  numero_soporte INT NOT NULL,
   horas_hombre float,
   uf float,
   descripcion VARCHAR(4000),
   solucion VARCHAR(4000),
   celular varchar(12),
   email varchar(45),
-  caja int,
   urgente BOOLEAN,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   bodega_id CHAR(36) NOT NULL,
+  caja_id CHAR(36) NOT NULL,
   dificultad_soporte_id CHAR(36) NOT NULL,
   estado_soporte_id CHAR(36) NOT NULL,
   tipo_soporte_id CHAR(36) NOT NULL,
-  FOREIGN KEY (bodega_id) REFERENCES bodega(id),
-  FOREIGN KEY (dificultad_soporte_id) REFERENCES dificultad_soporte(id),
-  FOREIGN KEY (estado_soporte_id) REFERENCES estado_soporte(id),
-  FOREIGN KEY (tipo_soporte_id) REFERENCES tipo_soporte(id)
+  FOREIGN KEY (bodega_id) REFERENCES bodegas(id),
+  FOREIGN KEY (caja_id) REFERENCES cajas(id),
+  FOREIGN KEY (dificultad_soporte_id) REFERENCES dificultades_soporte(id),
+  FOREIGN KEY (estado_soporte_id) REFERENCES estados_soporte(id),
+  FOREIGN KEY (tipo_soporte_id) REFERENCES tipos_soporte(id)
 );
 
-CREATE TABLE historial_estado (
+CREATE TABLE relaciones_soporte (
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  soporte_padre_id CHAR(36) NOT NULL,
+  soporte_hijo_id CHAR(36) NOT NULL,
+  FOREIGN KEY (soporte_padre_id) REFERENCES soportes(id) ON DELETE CASCADE,
+  FOREIGN KEY (soporte_hijo_id) REFERENCES soportes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE historiales_estado (
   id CHAR(36) NOT NULL PRIMARY KEY,
   created_at TIMESTAMP NOT NULL,
   comentario VARCHAR(255) NULL,
   soporte_id CHAR(36) NOT NULL,
   estado_soporte_id CHAR(36) NOT NULL,
   usuario_id CHAR(36) NOT NULL,
-  FOREIGN KEY (soporte_id) REFERENCES soporte(id) ON DELETE CASCADE,
-  FOREIGN KEY (estado_soporte_id) REFERENCES estado_soporte(id),
-  FOREIGN KEY (usuario_id) REFERENCES usuario(id)
+  FOREIGN KEY (soporte_id) REFERENCES soportes(id) ON DELETE CASCADE,
+  FOREIGN KEY (estado_soporte_id) REFERENCES estados_soporte(id),
+  FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 );
 
-CREATE TABLE notas(
+CREATE TABLE notas (
   id CHAR(36) NOT NULL PRIMARY KEY,
   usuario_id CHAR(36) NOT NULL,
   soporte_id CHAR(36) NOT NULL,
-  FOREIGN KEY(soporte_id) REFERENCES soporte(id) ON DELETE CASCADE,
-  FOREIGN KEY(usuario_id) REFERENCES usuario(id) ON DELETE CASCADE,
+  FOREIGN KEY(soporte_id) REFERENCES soportes(id) ON DELETE CASCADE,
+  FOREIGN KEY(usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
   nota varchar(255) NOT NULL,
   fecha_de_creacion TIMESTAMP NOT NULL
 );
