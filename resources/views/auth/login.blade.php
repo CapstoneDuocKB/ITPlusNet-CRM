@@ -25,26 +25,32 @@
                 <x-label for="password" value="{{ __('Contraseña') }}" />
                 <x-input id="password" placeholder="Ingrese su Contraseña" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
             </div>
-
-            <div class="block mt-4">
+            
+            <div class="flex items-center justify-between mt-4">
+                @if (Route::has('password.request'))
+                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500" href="{{ route('password.request') }}">
+                    {{ __('¿Olvidaste tu contraseña?') }}
+                </a>
+                @endif
                 <label for="remember_me" class="flex items-center">
                     <x-checkbox id="remember_me" name="remember" />
                     <span class="ms-2 text-sm text-gray-600">{{ __('Mantener sesión iniciada') }}</span>
                 </label>
+
             </div>
-
-            <div class="flex items-center justify-end mt-4">
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
-                        {{ __('¿Olvidaste tu contraseña?') }}
-                    </a>
-                @endif
-
+                
+                <div class="flex items-center justify-between mt-4">
+                    @if (Route::has('register'))
+                        <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500" href="{{ route('register') }}">
+                            {{ __('¿Aun no tienes una cuenta? Regístrate') }}
+                        </a>
+                    @endif
                 <x-button class="ms-4">
                     {{ __('Acceder') }}
                 </x-button>
             </div>
         </form>
+
     </x-authentication-card>
 
     <!-- Cargar el script al final -->

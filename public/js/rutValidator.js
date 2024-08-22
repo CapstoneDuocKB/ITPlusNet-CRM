@@ -67,7 +67,7 @@ function onSubmitForm(event) {
     var errorMessage = document.getElementById('rut-error-message');
 
     if (!validarRut(rutInput.value)) {
-        rutInput.classList.add('border-red-500', 'border-4');
+        rutInput.classList.add('border-red-600', 'border-4');
         rutInput.classList.add('bg-red-100');
         errorMessage.textContent = 'RUT inválido';
         errorMessage.classList.remove('hidden');
