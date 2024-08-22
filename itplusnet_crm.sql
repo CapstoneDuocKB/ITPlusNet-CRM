@@ -119,7 +119,7 @@ CREATE TABLE sessions (
 
 CREATE TABLE soportes (
   id CHAR(36) NOT NULL PRIMARY KEY,
-  numero_soporte INT NOT NULL,
+  numero_soporte INT NOT NULL AUTO_INCREMENT UNIQUE,
   horas_hombre float,
   uf float,
   descripcion VARCHAR(4000),
@@ -141,7 +141,7 @@ CREATE TABLE soportes (
   FOREIGN KEY (tipo_soporte_id) REFERENCES tipos_soporte(id)
 );
 
-CREATE TABLE relaciones_soporte (
+CREATE TABLE jerarquia_soportes (
   id CHAR(36) NOT NULL PRIMARY KEY,
   soporte_padre_id CHAR(36) NOT NULL,
   soporte_hijo_id CHAR(36) NOT NULL,
