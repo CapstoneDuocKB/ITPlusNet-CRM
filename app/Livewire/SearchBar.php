@@ -12,12 +12,12 @@ class SearchBar extends Component
     {
         $results = [];
     
-        if (strlen($this->searchTerm) > 2) {
+        if (strlen($this->searchTerm) > 0) {
             $routes = [
-                'Lista de Usuarios' => route('users.index'),
-                'Lista de Soportes' => route('supports.index'),
-                'Lista de Empresas' => route('companies.index'),
-                'Editar Perfil' => route('profile.edit'),
+                'Editar Perfil' => route('profile.show'),
+                // 'Lista de Usuarios' => route('users.index'),
+                // 'Lista de Soportes' => route('supports.index'),
+                // 'Lista de Empresas' => route('companies.index'),
             ];
     
             foreach ($routes as $name => $route) {
@@ -31,13 +31,14 @@ class SearchBar extends Component
         }
     
         // Mostrar detalles para depuración
-        logger()->info('Término de búsqueda: ' . $this->searchTerm);
-        logger()->info('Resultados: ' . json_encode($results));
+        // logger()->info('Término de búsqueda: ' . $this->searchTerm);
+        // logger()->info('Resultados: ' . json_encode($results));
     
         return view('livewire.search-bar', [
             'results' => $results,
             'searchTerm' => $this->searchTerm,
         ]);
+
     }
     
 }
