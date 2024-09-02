@@ -10,7 +10,9 @@ class SearchBar extends Component
 
     public function render()
     {
+        // El resto de tu lógica
         $results = [];
+<<<<<<< Updated upstream
     
         if (strlen($this->searchTerm) > 0) {
             $routes = [
@@ -34,11 +36,17 @@ class SearchBar extends Component
         // logger()->info('Término de búsqueda: ' . $this->searchTerm);
         // logger()->info('Resultados: ' . json_encode($results));
     
+=======
+
+        if (strlen($this->searchTerm) > 2) {
+            // Lógica para llenar $results
+        }
+
+>>>>>>> Stashed changes
         return view('livewire.search-bar', [
             'results' => $results,
             'searchTerm' => $this->searchTerm,
         ]);
 
     }
-    
 }
