@@ -10,8 +10,9 @@ class SearchBar extends Component
 
     public function render()
     {
+        // El resto de tu lógica
         $results = [];
-    
+
         if (strlen($this->searchTerm) > 0) {
             $routes = [
                 'Editar Perfil' => route('profile.show'),
@@ -40,5 +41,4 @@ class SearchBar extends Component
         ]);
 
     }
-    
 }
