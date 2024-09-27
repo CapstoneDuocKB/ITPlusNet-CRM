@@ -60,7 +60,7 @@ CREATE TABLE sucursales (
   direccion_id CHAR(36),
   sucursal_id CHAR(36),
   FOREIGN KEY (direccion_id) REFERENCES direcciones(id),
-  FOREIGN KEY (sucursal_id) REFERENCES sucursales(id)
+  FOREIGN KEY (empresa_id) REFERENCES empresas(id)
 );
 
 CREATE TABLE bodegas (
