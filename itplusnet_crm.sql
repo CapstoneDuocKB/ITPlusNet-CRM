@@ -141,6 +141,15 @@ CREATE TABLE soportes (
   FOREIGN KEY (tipo_soporte_id) REFERENCES tipos_soporte(id)
 );
 
+CREATE TABLE img_soportes (
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  soporte_id CHAR(36) NOT NULL,
+  ruta_imagen VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (soporte_id) REFERENCES soportes(id) ON DELETE CASCADE
+);
+
+
 CREATE TABLE jerarquia_soportes (
   id CHAR(36) NOT NULL PRIMARY KEY,
   soporte_padre_id CHAR(36) NOT NULL,
