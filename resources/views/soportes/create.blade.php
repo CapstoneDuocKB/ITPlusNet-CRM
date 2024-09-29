@@ -57,12 +57,7 @@
                     <!-- Adjuntar Imágenes con Dropzone -->
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2">Adjuntar Imágenes</label>
-                        <div id="dropzone" class="dropzone border-dashed border-2 border-gray-300 rounded-md flex items-center justify-center cursor-pointer">
-                            <div class="text-center">
-                                <!-- <div class="text-5xl">+</div> -->
-                                <!-- <div class="mt-2 text-sm text-gray-500">Arrastra y suelta las imágenes aquí o haz clic para seleccionar</div> -->
-                            </div>
-                        </div>
+                        <div id="dropzone" class="dropzone border-dashed border-2 border-gray-300 rounded-md flex items-center justify-center cursor-pointer"></div>
                     </div>
 
                     <!-- Urgente -->
@@ -73,7 +68,7 @@
 
                     <!-- Botones -->
                     <div class="flex items-center justify-between">
-                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button type="submit" id="submit-all" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Crear Soporte
                         </button>
                         <a href="{{ route('soportes.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
@@ -89,45 +84,43 @@
 
     <!-- Configuración de Dropzone -->
     @push('scripts')
-<script>
-    window.addEventListener('load', function () {
-        // Check if Dropzone is defined
-        if (typeof Dropzone !== 'undefined') {
-            // Disable auto-discovery
-            Dropzone.autoDiscover = false;
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.Dropzone && !Dropzone.instances.length) { // Verifica que Dropzone esté definido y que no haya instancias previas
+                Dropzone.autoDiscover = false; // Deshabilita el auto-descubrimiento global
+    
+                var dropzoneElement = document.getElementById('dropzone');
+                if (dropzoneElement && !dropzoneElement.dropzone) { // Verifica que el elemento exista y no tenga Dropzone ya asociado
+                    var myDropzone = new Dropzone(dropzoneElement, {
+                        url: "{{ route('soportes.upload') }}", // Asegúrate de que la URL es correcta para la carga de archivos
+                        autoProcessQueue: true,
+                        uploadMultiple: true,
+                        maxFiles: 5,
+                        acceptedFiles: 'image/*',
+                        addRemoveLinks: true,
+                        dictRemoveFile: 'Eliminar',
+                        dictCancelUpload: 'Cancelar',
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                        },
+                        init: function() {
+                            var submitButton = document.querySelector("#submit-all");
+                            myDropzone = this;
 
-            // Get the element
-            var dropzoneElement = document.getElementById('dropzone');
+                            submitButton.addEventListener("click", function() {
+                                myDropzone.processQueue(); // Procesar todos los archivos en cola cuando el usuario finalice el formulario
+                            });
 
-            // Initialize Dropzone
-            var myDropzone = new Dropzone(dropzoneElement, {
-                url: "{{ route('soportes.create') }}",
-                autoProcessQueue: true,
-                uploadMultiple: false,
-                maxFiles: 10,
-                acceptedFiles: 'image/*',
-                addRemoveLinks: true,
-                dictRemoveFile: 'Eliminar',
-                dictCancelUpload: 'Cancelar',
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                },
-                init: function () {
-                    this.on("success", function (file, response) {
-                        // Handle success
-                    });
-
-                    this.on("error", function (file, response) {
-                        // Handle error
+                            this.on("sendingmultiple", function(data, xhr, formData) {
+                                // No necesitas agregar campos del formulario aquí si solo estás subiendo archivos
+                            });
+                        }
                     });
                 }
-            });
-        } else {
-            console.error('Dropzone is not defined');
-        }
-    });
-</script>
-@endpush
+            }
+        });
+    </script>
+    @endpush
 
     @stack('scripts')
 
