@@ -31,7 +31,7 @@
                   x-cloak>Usuarios</span>
         </a>
 
-        <a href="{{ route('profile.show') }}" 
+        <a href="{{ route('soportes.create') }}" 
            class="flex items-center w-full px-4 py-3 rounded-md hover:bg-gray-100
                   {{ request()->routeIs('profile.show') ? 'bg-gray-200 text-black font-bold' : '' }}">
             <svg class="w-6 h-6 flex-shrink-0 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

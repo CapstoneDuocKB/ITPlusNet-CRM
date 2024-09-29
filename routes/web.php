@@ -6,6 +6,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+use App\Http\Controllers\SoporteController;
+
+Route::get('/soportes/create', [SoporteController::class, 'create'])->name('soportes.create');
+Route::post('/soportes', [SoporteController::class, 'store'])->name('soportes.store');
+Route::get('/soportes', [SoporteController::class, 'index'])->name('soportes.index');
+
+
 
 Route::middleware([
     'auth:sanctum',
