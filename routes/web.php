@@ -9,7 +9,7 @@ Route::get('/', function () {
 use App\Http\Controllers\SoporteController;
 
 Route::get('/soportes/create', [SoporteController::class, 'create'])->name('soportes.create');
-Route::post('/soportes/upload', 'SoporteController@upload')->name('soportes.upload');
+Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
 Route::post('/soportes', [SoporteController::class, 'store'])->name('soportes.store');
 Route::get('/soportes', [SoporteController::class, 'index'])->name('soportes.index');
 

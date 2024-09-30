@@ -81,5 +81,9 @@ class Soporte extends Model
         return $this->belongsTo(TipoSoporte::class, 'tipo_soporte_id');
     }
 
-    // Puedes agregar más relaciones según tus necesidades
+    // Relación uno a muchos con ImgSoporte (un soporte tiene muchas imágenes)
+    public function soporteImagenes()
+    {
+        return $this->hasMany(SoporteImagen::class, 'soporte_id');
+    }
 }

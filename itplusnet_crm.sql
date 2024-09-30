@@ -142,7 +142,7 @@ CREATE TABLE soportes (
   FOREIGN KEY (tipo_soporte_id) REFERENCES tipos_soporte(id)
 );
 
-CREATE TABLE img_soportes (
+CREATE TABLE soporte_imagenes (
   id CHAR(36) NOT NULL PRIMARY KEY,
   soporte_id CHAR(36) NOT NULL,
   ruta_imagen VARCHAR(255) NOT NULL,
