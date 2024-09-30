@@ -118,8 +118,62 @@
                 });
                 // }
             }
-        });
-    </script>
+        }
+    });
+</script>
+
+<!-- Estilos CSS personalizados -->
+<style>
+    /* Ocultar información no deseada (nombre, peso y objeto) */
+    .dz-size, .dz-filename, .dz-details, .dz-error-message {
+        display: none !important;
+    }
+
+    /* Personalizar el botón de eliminar */
+    .dz-remove {
+        display: block;
+        margin-top: 2px; /* Reducir espacio entre la imagen y el botón */
+        padding: 5px 10px;
+        color: red;
+        border: 2px solid red;
+        background-color: transparent;
+        border-radius: 4px;
+        text-align: center;
+        width: 80px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: auto;  /* Centrar el botón */
+        margin-right: auto; /* Centrar el botón */
+    }
+
+    .dz-remove:hover {
+        background-color: red;
+        color: white;
+    }
+
+    /* Alinear el botón debajo de la imagen */
+    .dz-preview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 6px; /* Reducir el espacio en la parte inferior */
+    }
+
+    /* Ajustar el tamaño y estilo de la imagen */
+    .dz-image {
+        margin-bottom: 6px; /* Acercar el botón de eliminar a la imagen */
+    }
+
+    /* Asegurarse de que el contenedor de detalles esté completamente oculto */
+    .dz-details {
+        display: none;
+    }
+</style>
+
+
+
+
+
     @endpush
 
     @stack('scripts')
