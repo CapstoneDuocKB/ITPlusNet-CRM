@@ -12,6 +12,7 @@ Route::get('/soportes/create', [SoporteController::class, 'create'])->name('sopo
 Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
 Route::post('/soportes', [SoporteController::class, 'store'])->name('soportes.store');
 Route::get('/soportes', [SoporteController::class, 'index'])->name('soportes.index');
+Route::get('/soportes/read', [SoporteController::class, 'read'])->name('soportes.read');
 
 
 

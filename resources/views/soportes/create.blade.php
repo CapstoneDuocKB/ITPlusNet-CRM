@@ -85,21 +85,22 @@
     <!-- Configuración de Dropzone -->
     @push('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            if (window.Dropzone && !Dropzone.instances.length) { // Verifica que Dropzone esté definido y que no haya instancias previas
-                Dropzone.autoDiscover = false; // Deshabilita el auto-descubrimiento global
-    
-                var dropzoneElement = document.getElementById('dropzone');
-                // if (dropzoneElement && !dropzoneElement.dropzone) { // Verifica que el elemento exista y no tenga Dropzone ya asociado
+    document.addEventListener('DOMContentLoaded', function () {
+        if (window.Dropzone && !Dropzone.instances.length) { // Verifica que Dropzone esté definido y que no haya instancias previas
+            Dropzone.autoDiscover = false; // Deshabilita el auto-descubrimiento global
+
+            var dropzoneElement = document.getElementById('dropzone');
+            if (dropzoneElement && !dropzoneElement.dropzone) { // Verifica que el elemento exista y no tenga Dropzone ya asociado
                 var myDropzone = new Dropzone(dropzoneElement, {
-                    url: "{{ route('soportes.store') }}", 
-                    autoProcessQueue: false,
+                    url: "{{ route('soportes.upload') }}", // Asegúrate de que la URL es correcta para la carga de archivos
+                    autoProcessQueue: true,
                     uploadMultiple: true,
                     maxFiles: 5,
                     acceptedFiles: 'image/*',
                     addRemoveLinks: true,
                     dictRemoveFile: 'Eliminar',
                     dictCancelUpload: 'Cancelar',
+                    dictDefaultMessage: 'Arrastra aquí tus archivos para subirlos', // Traducción del mensaje
                     headers: {
                         'X-CSRF-TOKEN': "{{ csrf_token() }}"
                     },
@@ -107,6 +108,25 @@
                         var submitButton = document.querySelector("#submit-all");
                         myDropzone = this;
 
+                        // Ocultar el mensaje predeterminado al agregar una imagen
+                        this.on("addedfile", function(file) {
+                            var defaultMessage = document.querySelector('.dz-message'); // Selecciona el mensaje predeterminado
+                            if (defaultMessage) {
+                                defaultMessage.style.display = 'none'; // Oculta el mensaje
+                            }
+                        });
+
+                        // Mostrar el mensaje si no quedan archivos en el Dropzone después de eliminar uno
+                        this.on("removedfile", function(file) {
+                            if (this.files.length === 0) {
+                                var defaultMessage = document.querySelector('.dz-message'); // Selecciona el mensaje predeterminado
+                                if (defaultMessage) {
+                                    defaultMessage.style.display = 'block'; // Vuelve a mostrar el mensaje
+                                }
+                            }
+                        });
+
+                        // Manejar el procesamiento de la cola de Dropzone
                         submitButton.addEventListener("click", function() {
                             myDropzone.processQueue(); // Procesar todos los archivos en cola cuando el usuario finalice el formulario
                         });
@@ -116,7 +136,6 @@
                         });
                     }
                 });
-                // }
             }
         }
     });
@@ -124,50 +143,51 @@
 
 <!-- Estilos CSS personalizados -->
 <style>
-    /* Ocultar información no deseada (nombre, peso y objeto) */
-    .dz-size, .dz-filename, .dz-details, .dz-error-message {
-        display: none !important;
-    }
+    /* Hide unwanted information (name, size, and error messages) */
+.dz-size, .dz-filename, .dz-error-message {
+    display: none !important;
+}
 
-    /* Personalizar el botón de eliminar */
-    .dz-remove {
-        display: block;
-        margin-top: 2px; /* Reducir espacio entre la imagen y el botón */
-        padding: 5px 10px;
-        color: red;
-        border: 2px solid red;
-        background-color: transparent;
-        border-radius: 4px;
-        text-align: center;
-        width: 80px;
-        font-weight: bold;
-        cursor: pointer;
-        margin-left: auto;  /* Centrar el botón */
-        margin-right: auto; /* Centrar el botón */
-    }
+/* Customize the remove button */
+.dz-remove {
+    display: block;
+    margin-top: 2px;
+    padding: 5px 10px;
+    color: red;
+    border: 2px solid red;
+    background-color: transparent;
+    border-radius: 4px;
+    text-align: center;
+    width: 80px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-    .dz-remove:hover {
-        background-color: red;
-        color: white;
-    }
+.dz-remove:hover {
+    background-color: red;
+    color: white;
+}
 
-    /* Alinear el botón debajo de la imagen */
-    .dz-preview {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 6px; /* Reducir el espacio en la parte inferior */
-    }
+/* Align the button below the image */
+.dz-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 5px;
+}
 
-    /* Ajustar el tamaño y estilo de la imagen */
-    .dz-image {
-        margin-bottom: 6px; /* Acercar el botón de eliminar a la imagen */
-    }
+/* Adjust image size and style */
+.dz-image {
+    margin-bottom: 2px;
+}
 
-    /* Asegurarse de que el contenedor de detalles esté completamente oculto */
-    .dz-details {
-        display: none;
-    }
+/* Ensure the details container is visible */
+.dz-details {
+    display: block;
+}
+
 </style>
 
 

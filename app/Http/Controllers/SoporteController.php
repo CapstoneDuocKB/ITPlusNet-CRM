@@ -23,6 +23,16 @@ class SoporteController extends Controller
 
         return view('soportes.create', compact('bodegas', 'cajas'));
     }
+    public function read()
+    {
+        // Obtener los soportes paginados, por ejemplo 10 soportes por página
+        $soportes = Soporte::paginate(10);
+    
+        // Retornar la vista read.blade.php con los soportes paginados
+        return view('soportes.read', compact('soportes'));
+    }
+    
+
 
     // public function upload(Request $request)
     // {
