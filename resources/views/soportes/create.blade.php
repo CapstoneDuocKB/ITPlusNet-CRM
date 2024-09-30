@@ -90,33 +90,33 @@
                 Dropzone.autoDiscover = false; // Deshabilita el auto-descubrimiento global
     
                 var dropzoneElement = document.getElementById('dropzone');
-                if (dropzoneElement && !dropzoneElement.dropzone) { // Verifica que el elemento exista y no tenga Dropzone ya asociado
-                    var myDropzone = new Dropzone(dropzoneElement, {
-                        url: "{{ route('soportes.upload') }}", // Asegúrate de que la URL es correcta para la carga de archivos
-                        autoProcessQueue: true,
-                        uploadMultiple: true,
-                        maxFiles: 5,
-                        acceptedFiles: 'image/*',
-                        addRemoveLinks: true,
-                        dictRemoveFile: 'Eliminar',
-                        dictCancelUpload: 'Cancelar',
-                        headers: {
-                            'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                        },
-                        init: function() {
-                            var submitButton = document.querySelector("#submit-all");
-                            myDropzone = this;
+                // if (dropzoneElement && !dropzoneElement.dropzone) { // Verifica que el elemento exista y no tenga Dropzone ya asociado
+                var myDropzone = new Dropzone(dropzoneElement, {
+                    url: "{{ route('soportes.store') }}", 
+                    autoProcessQueue: false,
+                    uploadMultiple: true,
+                    maxFiles: 5,
+                    acceptedFiles: 'image/*',
+                    addRemoveLinks: true,
+                    dictRemoveFile: 'Eliminar',
+                    dictCancelUpload: 'Cancelar',
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                    },
+                    init: function() {
+                        var submitButton = document.querySelector("#submit-all");
+                        myDropzone = this;
 
-                            submitButton.addEventListener("click", function() {
-                                myDropzone.processQueue(); // Procesar todos los archivos en cola cuando el usuario finalice el formulario
-                            });
+                        submitButton.addEventListener("click", function() {
+                            myDropzone.processQueue(); // Procesar todos los archivos en cola cuando el usuario finalice el formulario
+                        });
 
-                            this.on("sendingmultiple", function(data, xhr, formData) {
-                                // No necesitas agregar campos del formulario aquí si solo estás subiendo archivos
-                            });
-                        }
-                    });
-                }
+                        this.on("sendingmultiple", function(data, xhr, formData) {
+                            // No necesitas agregar campos del formulario aquí si solo estás subiendo archivos
+                        });
+                    }
+                });
+                // }
             }
         });
     </script>
