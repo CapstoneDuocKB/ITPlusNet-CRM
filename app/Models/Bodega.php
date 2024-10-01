@@ -11,19 +11,19 @@ class Bodega extends Model
 
     protected $table = 'bodegas';
 
+    protected $primaryKey = 'id';
+    public $incrementing = false; // Dado que 'id' es CHAR(36)
+    protected $keyType = 'string'; // La clave primaria no es entera
+
     protected $fillable = [
+        'id',
         'nombre',
         'activa',
-        'sucursal_id'
+        'sucursal_id',
     ];
 
     public function sucursal()
     {
-        return $this->belongsTo(Sucursal::class);
-    }
-
-    public function soportes()
-    {
-        return $this->hasMany(Soporte::class);
+        return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
 }

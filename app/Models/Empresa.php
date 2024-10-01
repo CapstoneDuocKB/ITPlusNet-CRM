@@ -9,13 +9,14 @@ class Empresa extends Model
 {
     use HasFactory;
 
-    protected $table = 'empresas'; // Nombre de la tabla en plural
+    protected $table = 'empresas';
 
     protected $primaryKey = 'id';
-    public $incrementing = false; // Indica que el id no es auto-incremental
-    protected $keyType = 'string'; // Tipo de la clave primaria
+    public $incrementing = false; // 'id' es CHAR(36)
+    protected $keyType = 'string'; // La clave primaria es un string
 
     protected $fillable = [
+        'id',
         'rut',
         'nombre',
         'razon_social',
@@ -25,30 +26,8 @@ class Empresa extends Model
         'activa',
     ];
 
-    /**
-     * Relación con la tabla `direcciones`
-     * Una empresa pertenece a una dirección.
-     */
     public function direccion()
     {
         return $this->belongsTo(Direccion::class, 'direccion_id');
-    }
-
-    /**
-     * Relación con la tabla `sucursales`
-     * Una empresa tiene muchas sucursales.
-     */
-    public function sucursales()
-    {
-        return $this->hasMany(Sucursal::class);
-    }
-
-    /**
-     * Relación con la tabla `usuarios`
-     * Una empresa tiene muchos usuarios.
-     */
-    public function usuarios()
-    {
-        return $this->hasMany(Usuario::class);
     }
 }

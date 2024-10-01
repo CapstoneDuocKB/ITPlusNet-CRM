@@ -9,42 +9,27 @@ class Direccion extends Model
 {
     use HasFactory;
 
-    protected $table = 'direcciones'; // Nombre de la tabla en plural
+    protected $table = 'direcciones';
 
     protected $primaryKey = 'id';
-    public $incrementing = false; // Indica que el id no es auto-incremental
-    protected $keyType = 'string'; // Tipo de la clave primaria
+    public $incrementing = false; // 'id' es CHAR(36)
+    protected $keyType = 'string';
 
     protected $fillable = [
+        'id',
         'calle',
         'numero',
         'comuna_id',
     ];
 
-    /**
-     * Relación con la tabla `comunas`
-     * Una dirección pertenece a una comuna.
-     */
     public function comuna()
     {
         return $this->belongsTo(Comuna::class, 'comuna_id');
     }
 
-    /**
-     * Relación con la tabla `empresas`
-     * Una dirección puede estar relacionada con varias empresas.
-     */
-    public function empresas()
+    public function getDescripcionAttribute()
     {
-        return $this->hasMany(Empresa::class, 'direccion_id');
-    }
-
-    /**
-     * Relación con la tabla `sucursales`
-     * Una dirección puede estar relacionada con varias sucursales.
-     */
-    public function sucursales()
-    {
-        return $this->hasMany(Sucursal::class, 'direccion_id');
+        return "{$this->calle} {$this->numero}, "
+            . "{$this->comuna->nombre}";
     }
 }

@@ -9,22 +9,20 @@ class Region extends Model
 {
     use HasFactory;
 
-    protected $table = 'regiones'; // Nombre de la tabla en plural
+    protected $table = 'regiones';
 
     protected $primaryKey = 'id';
-    public $incrementing = false; // Indica que el id no es auto-incremental
-    protected $keyType = 'string'; // Tipo de la clave primaria
+    public $incrementing = false; // 'id' es CHAR(36)
+    protected $keyType = 'string'; // La clave primaria es un string
 
     protected $fillable = [
+        'id',
         'nombre',
     ];
 
-    /**
-     * Relación con la tabla `comunas`
-     * Una región tiene muchas comunas.
-     */
+    // Relaciones
     public function comunas()
     {
-        return $this->hasMany(Comuna::class);
+        return $this->hasMany(Comuna::class, 'region_id');
     }
 }

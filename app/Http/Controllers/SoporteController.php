@@ -9,9 +9,12 @@ use App\Models\Caja;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class SoporteController extends Controller
 {
+
+    
     /**
      * Muestra la vista del formulario para crear un soporte.
      */

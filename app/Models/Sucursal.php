@@ -9,48 +9,39 @@ class Sucursal extends Model
 {
     use HasFactory;
 
-    protected $table = 'sucursales'; // Nombre de la tabla en la base de datos
+    protected $table = 'sucursales';
 
-    // Si la clave primaria no es 'id' y es un string, puedes configurarlo así:
     protected $primaryKey = 'id';
-    public $incrementing = false; // Indica que el id no es auto-incremental
-    protected $keyType = 'string'; // Tipo de la clave primaria
+    public $incrementing = false; // Dado que 'id' es CHAR(36)
+    protected $keyType = 'string'; // La clave primaria es un string
 
-    /**
-     * Los atributos que son asignables en masa.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
+        'id',
         'nombre',
         'activa',
         'direccion_id',
+        'sucursal_id',
+        'empresa_id',
     ];
 
-    /**
-     * Relación con la tabla `direcciones`
-     * Una sucursal tiene una dirección.
-     */
+    // Relaciones
     public function direccion()
     {
         return $this->belongsTo(Direccion::class, 'direccion_id');
     }
 
-    /**
-     * Relación con la tabla `bodegas`
-     * Una sucursal puede tener muchas bodegas.
-     */
-    public function bodegas()
+    public function empresa()
     {
-        return $this->hasMany(Bodega::class);
+        return $this->belongsTo(Empresa::class, 'empresa_id');
     }
 
-    /**
-     * Relación con la tabla `cajas`
-     * Una sucursal puede tener muchas cajas.
-     */
-    public function cajas()
+    public function sucursalPadre()
     {
-        return $this->hasMany(Caja::class);
+        return $this->belongsTo(Sucursal::class, 'sucursal_id');
+    }
+
+    public function sucursalesHijas()
+    {
+        return $this->hasMany(Sucursal::class, 'sucursal_id');
     }
 }
