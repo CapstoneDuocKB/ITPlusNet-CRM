@@ -32,7 +32,7 @@
                             <td class="px-6 py-4 border-b">{{ $bodega->id }}</td>
                             <td class="px-6 py-4 border-b">{{ $bodega->nombre }}</td>
                             <td class="px-6 py-4 border-b">{{ $bodega->activa ? 'Sí' : 'No' }}</td>
-                            <td class="px-6 py-4 border-b">{{ $bodega->sucursal_id }}</td>
+                            <td class="px-6 py-4 border-b">{{ $bodega->sucursal->nombre ?? 'Sin Sucursal' }}</td>
                             <td class="px-6 py-4 border-b">
                                 <a href="{{ route('bodegas.show', $bodega->id) }}" class="text-blue-600 hover:text-blue-900">Ver</a> |
                                 <a href="{{ route('bodegas.edit', $bodega->id) }}" class="text-indigo-600 hover:text-indigo-900">Editar</a> |

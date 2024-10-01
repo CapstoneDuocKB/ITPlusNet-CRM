@@ -27,7 +27,7 @@ class CajasController extends Controller
         $request->validate([
             'nombre' => 'required|max:100',
             'activa' => 'sometimes|boolean',
-            'sucursal_id' => 'nullable|exists:sucursales,id',
+            'sucursal_id' => 'required|exists:sucursales,id',
         ]);
 
         $caja = new Caja();
@@ -60,7 +60,7 @@ class CajasController extends Controller
         $request->validate([
             'nombre' => 'required|max:100',
             'activa' => 'sometimes|boolean',
-            'sucursal_id' => 'nullable|exists:sucursales,id',
+            'sucursal_id' => 'required|exists:sucursales,id',
         ]);
 
         $caja = Caja::findOrFail($id);

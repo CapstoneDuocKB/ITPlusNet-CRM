@@ -20,6 +20,10 @@ class Region extends Model
         'nombre',
     ];
 
+
+    public $timestamps = false;
+
+    
     // Relaciones
     public function comunas()
     {

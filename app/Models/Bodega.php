@@ -26,4 +26,5 @@ class Bodega extends Model
     {
         return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
+    public $timestamps = false;
 }

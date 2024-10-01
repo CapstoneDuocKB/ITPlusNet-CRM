@@ -30,4 +30,6 @@ class Empresa extends Model
     {
         return $this->belongsTo(Direccion::class, 'direccion_id');
     }
+
+    public $timestamps = false;   
 }

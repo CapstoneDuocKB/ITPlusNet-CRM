@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Bodega;
+use App\Models\Sucursal;
 use Illuminate\Support\Str;
 
 class BodegasController extends Controller
@@ -18,7 +19,8 @@ class BodegasController extends Controller
     // Mostrar el formulario para crear una nueva bodega
     public function create()
     {
-        return view('bodegas.create');
+        $sucursales = Sucursal::all(); // Obtener todas las sucursales
+        return view('bodegas.create', compact('sucursales'));
     }
 
     // Almacenar una nueva bodega en la base de datos
@@ -27,7 +29,7 @@ class BodegasController extends Controller
         $request->validate([
             'nombre' => 'required|max:100',
             'activa' => 'sometimes|boolean',
-            'sucursal_id' => 'nullable|exists:sucursales,id',
+            'sucursal_id' => 'required|exists:sucursales,id',
         ]);
 
         $bodega = new Bodega();
@@ -51,7 +53,8 @@ class BodegasController extends Controller
     public function edit($id)
     {
         $bodega = Bodega::findOrFail($id);
-        return view('bodegas.edit', compact('bodega'));
+        $sucursales = Sucursal::all();
+        return view('bodegas.edit', compact('bodega', 'sucursales'));
     }
 
     // Actualizar una bodega existente en la base de datos
@@ -60,7 +63,7 @@ class BodegasController extends Controller
         $request->validate([
             'nombre' => 'required|max:100',
             'activa' => 'sometimes|boolean',
-            'sucursal_id' => 'nullable|exists:sucursales,id',
+            'sucursal_id' => 'required|exists:sucursales,id',
         ]);
 
         $bodega = Bodega::findOrFail($id);

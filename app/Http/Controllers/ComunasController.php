@@ -75,4 +75,6 @@ class ComunasController extends Controller
         return redirect()->route('comunas.index')
             ->with('success', 'Comuna eliminada exitosamente.');
     }
+
+    
 }

@@ -32,4 +32,5 @@ class Direccion extends Model
         return "{$this->calle} {$this->numero}, "
             . "{$this->comuna->nombre}";
     }
+    public $timestamps = false;   
 }

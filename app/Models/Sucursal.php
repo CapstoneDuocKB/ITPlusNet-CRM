@@ -44,4 +44,5 @@ class Sucursal extends Model
     {
         return $this->hasMany(Sucursal::class, 'sucursal_id');
     }
+    public $timestamps = false;
 }

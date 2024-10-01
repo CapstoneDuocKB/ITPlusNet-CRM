@@ -30,4 +30,7 @@ class Comuna extends Model
     {
         return $this->hasMany(Direccion::class, 'comuna_id');
     }
+
+
+    public $timestamps = false;    
 }
