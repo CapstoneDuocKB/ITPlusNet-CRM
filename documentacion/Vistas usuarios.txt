@@ -1,0 +1,165 @@
+Vistas usuarios
+
+Cliente
+
+El usuario cliente es el usuario final de nuestro software. Este usuario tendra la capacidad de realizar peticiones de servicios a la empresas (soportes) donde podrá: 
+crear (create), visualizar (read) y, actualizar (update).
+
+
+Crear soporte (Create)
+
+La vista create, esta codificada en el archivo views/soportes/create.blade.php. En esta se encontrará el formulario de los soportes con los campos:
+
+(Ingresar descripcion de los campos)
+Bodega:
+Caja
+Descripcion
+Celular
+Email
+Imagen de evidencia
+Urgente
+
+
+Visualizar soportes (Read)
+
+La vista Read, esta codificada en el archivo views/soportes/read.blade.php. En esta se encontraran todos los soportes creados por el usuario cliente, desde aqui el cliente podra escoger entre ver, editar y crear los soportes.
+
+La lista de los soportes se enlistaran con la siguiente informacion:
+
+
+Número de Soporte	
+Descripción	
+Tipo de Soporte	
+Estado	
+Urgente	
+Fecha de Creación	
+Última Actualización
+
+
+Actualizar soporte (Update)
+
+La vista update, esta codificada en el archivo views/soportes/update.blade.php. Este tendra los mismos campos que en la vista create.
+
+(Ingresar descripcion de los campos)
+Bodega:
+Caja
+Descripcion
+Celular
+Email
+Imagen de evidencia
+Urgente
+
+
+
+Gerente
+
+Visualizar soportes (Read)
+
+La vista Read, esta codificada en el archivo views/soportes/read.blade.php. En esta se encontraran todos los soportes creados por el usuario cliente, desde aqui el cliente podra escoger entre ver, editar y crear los soportes.
+
+La lista de los soportes se enlistaran con la siguiente informacion:
+
+
+Número de Soporte	
+Descripción	
+Tipo de Soporte	
+Estado	
+Urgente	
+Fecha de Creación	
+Última Actualización
+
+Visualizar, editar, jerarquizar y eliminar soportes
+
+El gerente tendra la posibilidad de Visualizar, editar, jerarquizar y eliminar soportes
+
+
+
+
+desarrollador
+
+CRUD DE EMPRESAS.
+CRUD DE USUARIOS {Gerentes, Clientes}
+
+CRUD DE SOPORTES
+
+
+
+
+*****************************************************************
+
+
+
+### **Cliente**
+
+El **Cliente** es el usuario final de nuestro software y tiene la capacidad de crear, visualizar y actualizar solicitudes de soporte a las empresas.
+
+#### **1. Crear Soporte**
+
+- **Archivo de Vista:** `views/soportes/create.blade.php`
+
+En esta vista, el cliente puede completar un formulario con los siguientes campos:
+
+- **Bodega:** Seleccione la bodega relacionada con la solicitud.
+- **Caja:** Indique la caja específica que presenta el problema.
+- **Descripción:** Detalle el problema o servicio requerido.
+- **Celular:** Proporcione un número de contacto telefónico.
+- **Email:** Ingrese una dirección de correo electrónico válida para comunicaciones.
+- **Imagen de Evidencia:** Adjunte imágenes que respalden la solicitud.
+- **Urgente:** Marque esta opción si la solicitud requiere atención inmediata.
+
+#### **2. Visualizar Soportes**
+
+- **Archivo de Vista:** `views/soportes/read.blade.php`
+
+Esta vista permite al cliente:
+
+- Ver una lista de todos sus soportes creados.
+- Escoger entre ver detalles, editar o crear nuevos soportes.
+
+**Información presentada en la lista:**
+
+- Número de Soporte
+- Descripción
+- Tipo de Soporte
+- Estado
+- Urgente
+- Fecha de Creación
+- Última Actualización
+
+#### **3. Actualizar Soporte**
+
+- **Archivo de Vista:** `views/soportes/update.blade.php`
+
+El cliente puede modificar soportes existentes utilizando los mismos campos que en la creación:
+
+- Bodega
+- Caja
+- Descripción
+- Celular
+- Email
+- Imagen de Evidencia
+- Urgente
+
+---
+
+### **Gerente**
+
+El **Gerente** tiene funcionalidades avanzadas para gestionar y priorizar los soportes creados por los clientes.
+
+#### **1. Visualizar Soportes**
+
+- **Archivo de Vista:** `views/soportes/read.blade.php`
+
+El gerente puede:
+
+- Acceder a todos los soportes creados por los clientes.
+- Ver la misma información detallada que el cliente.
+
+#### **2. Visualizar, Editar, Jerarquizar y Eliminar Soportes**
+
+El gerente tiene la capacidad de:
+
+- **Visualizar:** Examinar los detalles completos de cada soporte.
+- **Editar:** Actualizar información y cambiar el estado de los soportes.
+- **Jerarquizar:** Priorizar soportes según su urgencia o impacto.
+- **Eliminar:** Remover soportes que ya no sean relevantes o necesarios.

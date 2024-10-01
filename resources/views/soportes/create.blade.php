@@ -143,50 +143,46 @@
 
 <!-- Estilos CSS personalizados -->
 <style>
-    /* Hide unwanted information (name, size, and error messages) */
-.dz-size, .dz-filename, .dz-error-message {
-    display: none !important;
-}
+    /* Estilos CSS personalizados */
+    
+    .dz-size, .dz-filename, .dz-error-message {
+        display: none !important;
+    }
 
-/* Customize the remove button */
-.dz-remove {
-    display: block;
-    margin-top: 2px;
-    padding: 5px 10px;
-    color: red;
-    border: 2px solid red;
-    background-color: transparent;
-    border-radius: 4px;
-    text-align: center;
-    width: 80px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-left: auto;
-    margin-right: auto;
-}
+    .dz-remove {
+        display: block;
+        padding: 5px 10px;
+        color: red;
+        border: 2px solid red;
+        background-color: transparent;
+        border-radius: 4px;
+        text-align: center;
+        width: 80px;
+        font-weight: bold;
+        cursor: pointer;
+        margin: 0 auto; /* Centrar el botón */
+        margin-top: 0; /* Reducir el espacio entre la imagen y el botón */
+    }
 
-.dz-remove:hover {
-    background-color: red;
-    color: white;
-}
+    .dz-remove:hover {
+        background-color: red;
+        color: white;
+    }
 
-/* Align the button below the image */
-.dz-preview {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 5px;
-}
+    .dz-preview {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 0; /* Eliminar espacio adicional */
+    }
 
-/* Adjust image size and style */
-.dz-image {
-    margin-bottom: 2px;
-}
+    .dz-image {
+        margin-bottom: 0; /* Eliminar espacio entre imagen y botón */
+    }
 
-/* Ensure the details container is visible */
-.dz-details {
-    display: block;
-}
+    .dz-details {
+        display: block;
+    }
 
 </style>
 
