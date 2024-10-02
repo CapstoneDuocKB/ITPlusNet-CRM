@@ -22,7 +22,7 @@
                             <th class="px-6 py-3 border-b">ID</th>
                             <th class="px-6 py-3 border-b">Nombre</th>
                             <th class="px-6 py-3 border-b">Activa</th>
-                            <th class="px-6 py-3 border-b">Sucursal ID</th>
+                            <th class="px-6 py-3 border-b">Sucursal</th>
                             <th class="px-6 py-3 border-b">Acciones</th>
                         </tr>
                     </thead>
@@ -32,7 +32,7 @@
                             <td class="px-6 py-4 border-b">{{ $caja->id }}</td>
                             <td class="px-6 py-4 border-b">{{ $caja->nombre }}</td>
                             <td class="px-6 py-4 border-b">{{ $caja->activa ? 'Sí' : 'No' }}</td>
-                            <td class="px-6 py-4 border-b">{{ $caja->sucursal_id }}</td>
+                            <td class="px-6 py-4 border-b">{{ $caja->sucursal->nombre ?? 'Sin Sucursal' }}</td>
                             <td class="px-6 py-4 border-b">
                                 <a href="{{ route('cajas.show', $caja->id) }}" class="text-blue-600 hover:text-blue-900">Ver</a> |
                                 <a href="{{ route('cajas.edit', $caja->id) }}" class="text-indigo-600 hover:text-indigo-900">Editar</a> |
