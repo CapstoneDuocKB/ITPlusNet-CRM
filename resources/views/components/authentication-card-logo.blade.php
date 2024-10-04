@@ -7,5 +7,6 @@
 </a> --}}
 
 <a href="/">
-    <img src="{{ asset('img/itplusnet.jpg') }}" alt="ITPlusNet Logo" class="w-35 h-20">
+    {{-- <img src="{{ asset('img/itplusnet.jpg') }}" alt="ITPlusNet Logo" class="w-35 h-20"> --}}
+    <img src="{{ asset('img/itplusnet.png') }}" alt="ITPlusNet Logo" class="w-35 h-20">
 </a>
