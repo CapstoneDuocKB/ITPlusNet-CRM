@@ -18,12 +18,21 @@ use App\Http\Controllers\EstadosSoporteController;
 use App\Http\Controllers\TiposSoporteController;
 use App\Http\Controllers\DificultadesSoporteController;
 
+use App\Http\Controllers\ChatGPTController;
+
 
 // Route::get('/soportes/create', [SoporteController::class, 'create'])->name('soportes.create');
 // Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
 // Route::post('/soportes', [SoporteController::class, 'store'])->name('soportes.store');
 // Route::get('/soportes', [SoporteController::class, 'index'])->name('soportes.index');
 // Route::get('/soportes/read', [SoporteController::class, 'read'])->name('soportes.read');
+
+
+Route::get('/chat', function () {
+    return view('chat');
+});
+
+Route::post('/chat', [ChatGPTController::class, 'askChatGPT'])->name('chat.ask');
 
 Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
 
