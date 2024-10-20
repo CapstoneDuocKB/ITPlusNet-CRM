@@ -13,35 +13,35 @@ class Usuario extends Authenticatable
     use HasFactory, Notifiable, HasRoles;
 
     /**
-     * The table associated with the model.
+     * La tabla asociada con el modelo.
      *
      * @var string
      */
     protected $table = 'usuarios';
 
     /**
-     * The primary key associated with the table.
+     * La clave primaria asociada con la tabla.
      *
      * @var string
      */
     protected $primaryKey = 'id';
 
     /**
-     * Indicates if the IDs are auto-incrementing.
+     * Indica si las claves primarias son auto-incrementales.
      *
      * @var bool
      */
     public $incrementing = false;
 
     /**
-     * The "type" of the auto-incrementing ID.
+     * El tipo de clave primaria.
      *
      * @var string
      */
     protected $keyType = 'string';
 
     /**
-     * The attributes that are mass assignable.
+     * Los atributos que son asignables en masa.
      *
      * @var array<int, string>
      */
@@ -57,7 +57,7 @@ class Usuario extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Los atributos que deben ocultarse para la serialización.
      *
      * @var array<int, string>
      */
@@ -67,19 +67,19 @@ class Usuario extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
+     * Los atributos que deben convertirse a tipos nativos.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'activo' => 'boolean',
-        ];
-    }
+    protected $casts = [ // Cambiado de método a propiedad
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+        'activo' => 'boolean',
+    ];
 
+    /**
+     * El método boot se utiliza para manejar eventos del modelo.
+     */
     protected static function boot()
     {
         parent::boot();
@@ -90,5 +90,21 @@ class Usuario extends Authenticatable
                 $model->{$model->getKeyName()} = Str::uuid()->toString();
             }
         });
+    }
+
+    /**
+     * Relación con el modelo Direccion.
+     */
+    public function direccion()
+    {
+        return $this->belongsTo(Direccion::class, 'direccion_id');
+    }
+
+    /**
+     * Relación con el modelo Empresa.
+     */
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'empresa_id');
     }
 }
