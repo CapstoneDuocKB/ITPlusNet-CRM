@@ -10,22 +10,30 @@ class Caja extends Model
     use HasFactory;
 
     protected $table = 'cajas';
-
     protected $primaryKey = 'id';
-    public $incrementing = false; // Dado que 'id' es CHAR(36)
-    protected $keyType = 'string'; // La clave primaria es un string
-
-    protected $fillable = [
-        'id',
-        'nombre',
-        'activa',
-        'sucursal_id',
-    ];
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected $fillable = ['id', 'nombre', 'activa', 'sucursal_id'];
+    public $timestamps = false;
 
     public function sucursal()
     {
         return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
-    
-    public $timestamps = false;   
+
+    public static function updateOrCreateFromApiData($data)
+    {
+        if (!Sucursal::where('id', $data['sucursal'])->exists()) {
+            // Omitir la inserción o registro de la caja si sucursal_id no es válido
+            return null;
+        }
+        return self::updateOrCreate(
+            ['id' => $data['codigo']],
+            [
+                'nombre' => $data['descripcion'],
+                'activa' => $data['activa'] ?? 1,
+                'sucursal_id' => $data['sucursal'],
+            ]
+        );
+    }
 }

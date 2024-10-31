@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Foundation\Auth\User as Authenticatable; // Importar la clase Authenticatable
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
@@ -12,39 +12,11 @@ class Usuario extends Authenticatable
 {
     use HasFactory, Notifiable, HasRoles;
 
-    /**
-     * La tabla asociada con el modelo.
-     *
-     * @var string
-     */
     protected $table = 'usuarios';
-
-    /**
-     * La clave primaria asociada con la tabla.
-     *
-     * @var string
-     */
     protected $primaryKey = 'id';
-
-    /**
-     * Indica si las claves primarias son auto-incrementales.
-     *
-     * @var bool
-     */
     public $incrementing = false;
-
-    /**
-     * El tipo de clave primaria.
-     *
-     * @var string
-     */
     protected $keyType = 'string';
 
-    /**
-     * Los atributos que son asignables en masa.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'rut',
         'name',
@@ -56,35 +28,17 @@ class Usuario extends Authenticatable
         'activo',
     ];
 
-    /**
-     * Los atributos que deben ocultarse para la serialización.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * Los atributos que deben convertirse a tipos nativos.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [ // Cambiado de método a propiedad
+    protected $hidden = ['password', 'remember_token'];
+    protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'activo' => 'boolean',
     ];
 
-    /**
-     * El método boot se utiliza para manejar eventos del modelo.
-     */
     protected static function boot()
     {
         parent::boot();
 
-        // Genera un UUID cuando se está creando un nuevo modelo
         static::creating(function ($model) {
             if (empty($model->{$model->getKeyName()})) {
                 $model->{$model->getKeyName()} = Str::uuid()->toString();
@@ -92,19 +46,30 @@ class Usuario extends Authenticatable
         });
     }
 
-    /**
-     * Relación con el modelo Direccion.
-     */
     public function direccion()
     {
         return $this->belongsTo(Direccion::class, 'direccion_id');
     }
 
-    /**
-     * Relación con el modelo Empresa.
-     */
     public function empresa()
     {
         return $this->belongsTo(Empresa::class, 'empresa_id');
     }
+
+    public static function updateOrCreateFromApiData($data)
+{
+    return self::updateOrCreate(
+        ['id' => $data['codigo']],
+        [
+            'rut' => $data['rut'] ?? null,
+            'name' => $data['usuario'] ?? 'Sin Nombre',
+            'email' => $data['email'] ?? 'sinemail@ejemplo.com',
+            'telefono' => $data['telefono'] ?? null,
+            'direccion_id' => $data['direccion_id'] ?? null,
+            'empresa_id' => $data['empresa_id'] ?? null,
+            'activo' => $data['activo'] ?? 1,
+            'password' => bcrypt('contraseña_genérica'), // Valor predeterminado para password
+        ]
+    );
+}
 }

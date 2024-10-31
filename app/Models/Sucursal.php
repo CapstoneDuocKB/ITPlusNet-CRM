@@ -10,21 +10,12 @@ class Sucursal extends Model
     use HasFactory;
 
     protected $table = 'sucursales';
-
     protected $primaryKey = 'id';
-    public $incrementing = false; // Dado que 'id' es CHAR(36)
-    protected $keyType = 'string'; // La clave primaria es un string
+    public $incrementing = false;
+    protected $keyType = 'string';
+    protected $fillable = ['id', 'nombre', 'activa', 'direccion_id', 'empresa_id'];
+    public $timestamps = false;
 
-    protected $fillable = [
-        'id',
-        'nombre',
-        'activa',
-        'direccion_id',
-        'sucursal_id',
-        'empresa_id',
-    ];
-
-    // Relaciones
     public function direccion()
     {
         return $this->belongsTo(Direccion::class, 'direccion_id');
@@ -35,14 +26,16 @@ class Sucursal extends Model
         return $this->belongsTo(Empresa::class, 'empresa_id');
     }
 
-    public function sucursalPadre()
+    public static function updateOrCreateFromApiData($data)
     {
-        return $this->belongsTo(Sucursal::class, 'sucursal_id');
+        return self::updateOrCreate(
+            ['id' => $data['codigo']],
+            [
+                'nombre' => $data['descripcion'],
+                'activa' => $data['activa'] ?? 1,
+                'direccion_id' => $data['direccion_id'] ?? null,
+                'empresa_id' => $data['empresa_id'] ?? null,
+            ]
+        );
     }
-
-    public function sucursalesHijas()
-    {
-        return $this->hasMany(Sucursal::class, 'sucursal_id');
-    }
-    public $timestamps = false;
 }
