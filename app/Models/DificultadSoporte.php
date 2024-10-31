@@ -9,16 +9,18 @@ class DificultadSoporte extends Model
 {
     use HasFactory;
 
-    protected $table = 'dificultad_soportes';
+    protected $table = 'dificultades_soporte';
+
+    protected $primaryKey = 'id';
+    public $incrementing = false; // 'id' es CHAR(36)
+    protected $keyType = 'string'; // La clave primaria es un string
+
+    public $timestamps = false; // La tabla no tiene campos 'created_at' ni 'updated_at'
 
     protected $fillable = [
+        'id',
         'nombre',
         'descripcion',
-        'uf'
+        'uf',
     ];
-
-    public function soportes()
-    {
-        return $this->hasMany(Soporte::class);
-    }
 }

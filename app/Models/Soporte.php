@@ -12,9 +12,9 @@ class Soporte extends Model
 
     protected $table = 'soportes';
 
-    public $incrementing = false;
+    public $incrementing = false; // 'id' es CHAR(36)
 
-    protected $keyType = 'string';
+    protected $keyType = 'string'; // La clave primaria es un string
 
     protected $fillable = [
         'bodega_id',
@@ -36,6 +36,8 @@ class Soporte extends Model
         'urgente' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'horas_hombre' => 'float',
+        'uf' => 'float',
     ];
 
     protected static function boot()
@@ -43,7 +45,7 @@ class Soporte extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            // Generar el siguiente número de soporte
+            // Generar el siguiente número de soporte de forma segura
             $maxNumeroSoporte = Soporte::max('numero_soporte');
             $model->numero_soporte = $maxNumeroSoporte ? $maxNumeroSoporte + 1 : 1;
 
@@ -54,8 +56,7 @@ class Soporte extends Model
         });
     }
 
-    // Relaciones (relaciones con otras tablas)
-
+    // Relaciones con otros modelos
     public function bodega()
     {
         return $this->belongsTo(Bodega::class, 'bodega_id');
@@ -81,7 +82,7 @@ class Soporte extends Model
         return $this->belongsTo(TipoSoporte::class, 'tipo_soporte_id');
     }
 
-    // Relación uno a muchos con ImgSoporte (un soporte tiene muchas imágenes)
+    // Relación uno a muchos con SoporteImagen (un soporte tiene muchas imágenes)
     public function soporteImagenes()
     {
         return $this->hasMany(SoporteImagen::class, 'soporte_id');

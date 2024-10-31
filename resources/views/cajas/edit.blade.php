@@ -27,15 +27,20 @@
                         <label for="activa" class="ml-2 block text-sm text-gray-900">Activa</label>
                     </div>
 
-                    <!-- Sucursal ID -->
+                    <!-- Sucursal -->
                     <div class="mb-4">
-                        <label for="sucursal_id" class="block text-gray-700 text-sm font-bold mb-2">Sucursal ID</label>
-                        <input type="text" id="sucursal_id" name="sucursal_id" value="{{ $caja->sucursal_id }}" maxlength="36" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <label for="sucursal_id" class="block text-gray-700 text-sm font-bold mb-2">Sucursal</label>
+                        <select name="sucursal_id" id="sucursal_id" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                            <option value="">Seleccione una sucursal</option>
+                            @foreach($sucursales as $sucursal)
+                                <option value="{{ $sucursal->id }}" {{ $caja->sucursal_id == $sucursal->id ? 'selected' : '' }}>{{ $sucursal->nombre }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <!-- Botones -->
                     <div class="flex items-center justify-between">
-                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700">
                             Actualizar Caja
                         </button>
                         <a href="{{ route('cajas.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-white hover:bg-gray-700">

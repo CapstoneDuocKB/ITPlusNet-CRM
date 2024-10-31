@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Caja;
+use App\Models\Sucursal;
 use Illuminate\Support\Str;
 
 class CajasController extends Controller
@@ -18,7 +19,8 @@ class CajasController extends Controller
     // Mostrar el formulario para crear una nueva caja
     public function create()
     {
-        return view('cajas.create');
+        $sucursales = Sucursal::all(); // Obtener todas las sucursales
+        return view('cajas.create', compact('sucursales'));
     }
 
     // Almacenar una nueva caja en la base de datos
@@ -51,7 +53,8 @@ class CajasController extends Controller
     public function edit($id)
     {
         $caja = Caja::findOrFail($id);
-        return view('cajas.edit', compact('caja'));
+        $sucursales = Sucursal::all(); // Obtener todas las sucursales
+        return view('cajas.edit', compact('caja', 'sucursales'));
     }
 
     // Actualizar una caja existente en la base de datos

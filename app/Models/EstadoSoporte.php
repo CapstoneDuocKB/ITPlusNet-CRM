@@ -9,15 +9,17 @@ class EstadoSoporte extends Model
 {
     use HasFactory;
 
-    protected $table = 'estado_soportes';
+    protected $table = 'estados_soporte';
+
+    protected $primaryKey = 'id';
+    public $incrementing = false; // 'id' es CHAR(36)
+    protected $keyType = 'string'; // La clave primaria es un string
 
     protected $fillable = [
+        'id',
         'nombre',
-        'descripcion'
+        'descripcion',
     ];
 
-    public function soportes()
-    {
-        return $this->hasMany(Soporte::class);
-    }
+    public $timestamps = false; // Si la tabla no tiene campos 'created_at' y 'updated_at'
 }
