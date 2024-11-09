@@ -20,7 +20,25 @@ use App\Http\Controllers\DificultadesSoporteController;
 
 use App\Http\Controllers\ChatGPTController;
 
+// Importar los controladores específicos por rol
+use App\Http\Controllers\Cliente\SoporteController as ClienteSoporteController;
+use App\Http\Controllers\SoporteTecnico\SoporteController as SoporteTecnicoSoporteController;
+use App\Http\Controllers\GestorPlataforma\SoporteController as GestorPlataformaSoporteController;
+use App\Http\Controllers\Gerente\SoporteController as GerenteSoporteController;
 
+
+Route::middleware(['auth'])->group(function () {
+
+    // Rutas para Clientes
+    Route::prefix('cliente')->name('cliente.')->middleware('role:Cliente')->group(function () {
+        Route::resource('soportes', ClienteSoporteController::class);
+    });
+
+    // Rutas para Soporte Técnico
+    Route::prefix('soporte-tecnico')->name('soporte_tecnico.')->middleware('role:SoporteTecnico')->group(function () {
+        Route::resource('soportes', SoporteTecnicoSoporteController::class)->except(['create', 'store']);
+    });
+});
 // Route::get('/soportes/create', [SoporteController::class, 'create'])->name('soportes.create');
 // Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
 // Route::post('/soportes', [SoporteController::class, 'store'])->name('soportes.store');

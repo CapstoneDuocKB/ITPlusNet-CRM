@@ -26,6 +26,8 @@ return [
 
         'role' => Spatie\Permission\Models\Role::class,
 
+        'user_model' => App\Models\Usuario::class,
+
     ],
 
     'table_names' => [
