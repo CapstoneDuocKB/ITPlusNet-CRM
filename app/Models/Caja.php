@@ -26,6 +26,32 @@ class Caja extends Model
     {
         return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
+<<<<<<< Updated upstream
     
     public $timestamps = false;   
+=======
+
+    // Relación polimórfica inversa
+    public function usuarios()
+    {
+        return $this->morphToMany(Usuario::class, 'relacionable', 'relacionables');
+    }
+
+    public static function updateOrCreateFromApiData($data)
+    {
+        // Verificar que sucursal_id existe en la tabla de sucursales
+        if (!Sucursal::where('id', $data['sucursal'])->exists()) {
+            // Omitir la inserción o registro de la caja si sucursal_id no es válido
+            return null;
+        }
+        return self::updateOrCreate(
+            ['id' => $data['codigo']],
+            [
+                'nombre' => $data['descripcion'],
+                'activa' => $data['activa'] ?? 1,
+                'sucursal_id' => $data['sucursal'],
+            ]
+        );
+    }
+>>>>>>> Stashed changes
 }
