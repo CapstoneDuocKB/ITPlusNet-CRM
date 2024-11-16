@@ -2,10 +2,6 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 use App\Http\Controllers\SoporteController;
 use App\Http\Controllers\BodegasController;
 use App\Http\Controllers\CajasController;
@@ -20,30 +16,19 @@ use App\Http\Controllers\DificultadesSoporteController;
 
 use App\Http\Controllers\ChatGPTController;
 
-// Importar los controladores específicos por rol
-use App\Http\Controllers\Cliente\SoporteController as ClienteSoporteController;
-use App\Http\Controllers\SoporteTecnico\SoporteController as SoporteTecnicoSoporteController;
-use App\Http\Controllers\GestorPlataforma\SoporteController as GestorPlataformaSoporteController;
-use App\Http\Controllers\Gerente\SoporteController as GerenteSoporteController;
-
-
-Route::middleware(['auth'])->group(function () {
-
-    // Rutas para Clientes
-    Route::prefix('cliente')->name('cliente.')->middleware('role:Cliente')->group(function () {
-        Route::resource('soportes', ClienteSoporteController::class);
-    });
-
-    // Rutas para Soporte Técnico
-    Route::prefix('soporte-tecnico')->name('soporte_tecnico.')->middleware('role:SoporteTecnico')->group(function () {
-        Route::resource('soportes', SoporteTecnicoSoporteController::class)->except(['create', 'store']);
-    });
+// Ruta pública inicial
+Route::get('/', function () {
+    return view('welcome');
 });
-// Route::get('/soportes/create', [SoporteController::class, 'create'])->name('soportes.create');
-// Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
-// Route::post('/soportes', [SoporteController::class, 'store'])->name('soportes.store');
-// Route::get('/soportes', [SoporteController::class, 'index'])->name('soportes.index');
-// Route::get('/soportes/read', [SoporteController::class, 'read'])->name('soportes.read');
+
+// Rutas para autenticación y permisos
+Route::middleware(['auth'])->group(function () {  
+    Route::get('/soportes/create', [SoporteController::class, 'create'])->name('soportes.create');
+    Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
+    Route::post('/soportes', [SoporteController::class, 'store'])->name('soportes.store');
+    Route::get('/soportes', [SoporteController::class, 'index'])->name('soportes.index');
+    Route::get('/soportes/read', [SoporteController::class, 'read'])->name('soportes.read');
+});
 
 
 Route::get('/chat', function () {
@@ -52,10 +37,8 @@ Route::get('/chat', function () {
 
 Route::post('/chat', [ChatGPTController::class, 'askChatGPT'])->name('chat.ask');
 
-Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
-
-
-Route::resource('soportes', SoporteController::class);
+// Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
+// Route::resource('soportes', SoporteController::class);
 
 Route::resource('bodegas', BodegasController::class);
 

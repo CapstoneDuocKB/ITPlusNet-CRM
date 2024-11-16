@@ -62,7 +62,6 @@ class Usuario extends Authenticatable
         'bodega_id',
     ];
 
-<<<<<<< Updated upstream
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -71,12 +70,6 @@ class Usuario extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-=======
-    protected $hidden = ['password', 'remember_token'];
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'activo' => 'boolean',
->>>>>>> Stashed changes
     ];
 
     /**
@@ -104,8 +97,6 @@ class Usuario extends Authenticatable
             }
         });
     }
-<<<<<<< Updated upstream
-=======
 
     // Definición de relaciones
     public function direccion()
@@ -188,5 +179,4 @@ class Usuario extends Authenticatable
             ]
         );
     }
->>>>>>> Stashed changes
 }

@@ -9,8 +9,9 @@ use App\Models\Caja;
 use App\Models\DificultadSoporte;
 use App\Models\EstadoSoporte;
 use App\Models\TipoSoporte;
+use App\Models\SoporteImagen;
 
-class SoporteController extends Controller
+class SoporteController
 {
     // Mostrar la lista de soportes
     public function index()

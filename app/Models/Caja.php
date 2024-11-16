@@ -26,10 +26,6 @@ class Caja extends Model
     {
         return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
-<<<<<<< Updated upstream
-    
-    public $timestamps = false;   
-=======
 
     // Relación polimórfica inversa
     public function usuarios()
@@ -53,5 +49,4 @@ class Caja extends Model
             ]
         );
     }
->>>>>>> Stashed changes
 }

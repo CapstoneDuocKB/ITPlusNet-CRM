@@ -12,30 +12,15 @@ class Bodega extends Model
     protected $table = 'bodegas';
 
     protected $primaryKey = 'id';
-<<<<<<< Updated upstream
-    public $incrementing = false; // Dado que 'id' es CHAR(36)
-    protected $keyType = 'string'; // La clave primaria no es entera
-
-    protected $fillable = [
-        'id',
-        'nombre',
-        'activa',
-        'sucursal_id',
-    ];
-=======
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = ['id', 'nombre', 'activa', 'sucursal_id', 'email'];
     public $timestamps = false;
->>>>>>> Stashed changes
 
     public function sucursal()
     {
         return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
-<<<<<<< Updated upstream
-    public $timestamps = false;
-=======
 
     // Relación polimórfica inversa
     public function usuarios()
@@ -60,5 +45,4 @@ class Bodega extends Model
             ]
         );
     }
->>>>>>> Stashed changes
 }

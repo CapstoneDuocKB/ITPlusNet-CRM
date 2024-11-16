@@ -35,9 +35,6 @@ class Sucursal extends Model
         return $this->belongsTo(Empresa::class, 'empresa_id');
     }
 
-<<<<<<< Updated upstream
-    public function sucursalPadre()
-=======
     // Relación polimórfica inversa
     public function usuarios()
     {
@@ -45,7 +42,6 @@ class Sucursal extends Model
     }
 
     public static function updateOrCreateFromApiData($data)
->>>>>>> Stashed changes
     {
         return $this->belongsTo(Sucursal::class, 'sucursal_id');
     }
