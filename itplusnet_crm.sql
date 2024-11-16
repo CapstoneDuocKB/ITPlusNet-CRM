@@ -68,6 +68,7 @@ CREATE TABLE bodegas (
   nombre VARCHAR(100) NOT NULL,
   activa BOOLEAN,
   sucursal_id CHAR(36),
+  email	VARCHAR(255) NOT NULL, 
   FOREIGN KEY (sucursal_id) REFERENCES sucursales(id)
 );
 
@@ -93,6 +94,12 @@ CREATE TABLE usuarios (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     activo BOOLEAN DEFAULT TRUE,
+    sucursal_id char(36) NOT NULL,
+    bodega_id char(36) NOT NULL,
+    caja_id char(36) NOT NULL,
+    FOREIGN KEY (sucursal_id) REFERENCES sucursales(id),
+    FOREIGN KEY (bodega_id) REFERENCES bodegas(id),
+    FOREIGN KEY (caja_id) REFERENCES cajas(id),
     FOREIGN KEY (direccion_id) REFERENCES direcciones(id),
     FOREIGN KEY (empresa_id) REFERENCES empresas(id)
 );
