@@ -20,7 +20,6 @@ class Sucursal extends Model
         'nombre',
         'activa',
         'direccion_id',
-        'sucursal_id',
         'empresa_id',
     ];
 
@@ -43,8 +42,17 @@ class Sucursal extends Model
 
     public static function updateOrCreateFromApiData($data)
     {
-        return $this->belongsTo(Sucursal::class, 'sucursal_id');
+        return self::updateOrCreate(
+            ['id' => $data['codigo']], // Asumiendo que 'id' es la clave primaria en los datos de la API
+            [
+                'nombre' => $data['descripcion'] ?? null,
+                'activa' => 1,
+                'direccion_id' => null,
+                'empresa_id' => null,
+            ]
+        );
     }
+    
 
     public function sucursalesHijas()
     {
