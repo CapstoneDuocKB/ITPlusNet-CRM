@@ -58,7 +58,6 @@ CREATE TABLE sucursales (
   nombre VARCHAR(100) NOT NULL,
   activa BOOLEAN,
   direccion_id CHAR(36),
-  sucursal_id CHAR(36),
   empresa_id char(36),
   FOREIGN KEY (direccion_id) REFERENCES direcciones(id),
   FOREIGN KEY (empresa_id) REFERENCES empresas(id)
