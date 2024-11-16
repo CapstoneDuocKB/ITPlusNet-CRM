@@ -24,122 +24,53 @@
 
                 <form method="POST" action="{{ route('soportes.store') }}" enctype="multipart/form-data" id="soporte-form">
                     @csrf
-
-                    <!-- Bodega -->
-                    <div class="mb-4">
-                        <label for="bodega_id" class="block text-gray-700 text-sm font-bold mb-2">Bodega</label>
-                        <select name="bodega_id" id="bodega_id" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
-                            <option value="">Seleccione una bodega</option>
-                            @foreach($bodegas as $bodega)
-                                <option value="{{ $bodega->id }}" {{ old('bodega_id') == $bodega->id ? 'selected' : '' }}>{{ $bodega->nombre }}</option>
-                            @endforeach
-                        </select>
+                
+                    <div class="flex flex-wrap -mx-4">
+                
+                        <!-- Celular -->
+                        <div class="w-full md:w-1/2 mb-6 px-4">
+                            <x-label for="celular" value="{{ __('Teléfono') }}" />
+                            <x-input id="celular" placeholder="Ingrese su Teléfono" class="block mt-1 w-full" type="text" name="celular" maxlength="12" :value="old('celular')" required />
+                        </div>
+                
+                        <!-- Email -->
+                        <div class="w-full md:w-1/2 mb-6 px-4">
+                            <x-label for="email" value="{{ __('Email') }}" />
+                            <x-input id="email" placeholder="Ingrese su Correo Electrónico" class="block mt-1 w-full" type="email" name="email" maxlength="45" :value="old('email')" required />
+                        </div>
                     </div>
-
-                    <!-- Caja -->
-                    <div class="mb-4">
-                        <label for="caja_id" class="block text-gray-700 text-sm font-bold mb-2">Caja</label>
-                        <select name="caja_id" id="caja_id" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
-                            <option value="">Seleccione una caja</option>
-                            @foreach($cajas as $caja)
-                                <option value="{{ $caja->id }}" {{ old('caja_id') == $caja->id ? 'selected' : '' }}>{{ $caja->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Dificultad de Soporte -->
-                    <div class="mb-4">
-                        <label for="dificultad_soporte_id" class="block text-gray-700 text-sm font-bold mb-2">Dificultad de Soporte</label>
-                        <select name="dificultad_soporte_id" id="dificultad_soporte_id" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
-                            <option value="">Seleccione una dificultad</option>
-                            @foreach($dificultades as $dificultad)
-                                <option value="{{ $dificultad->id }}" {{ old('dificultad_soporte_id') == $dificultad->id ? 'selected' : '' }}>{{ $dificultad->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Estado de Soporte -->
-                    <div class="mb-4">
-                        <label for="estado_soporte_id" class="block text-gray-700 text-sm font-bold mb-2">Estado de Soporte</label>
-                        <select name="estado_soporte_id" id="estado_soporte_id" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
-                            <option value="">Seleccione un estado</option>
-                            @foreach($estados as $estado)
-                                <option value="{{ $estado->id }}" {{ old('estado_soporte_id') == $estado->id ? 'selected' : '' }}>{{ $estado->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Tipo de Soporte -->
-                    <div class="mb-4">
-                        <label for="tipo_soporte_id" class="block text-gray-700 text-sm font-bold mb-2">Tipo de Soporte</label>
-                        <select name="tipo_soporte_id" id="tipo_soporte_id" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
-                            <option value="">Seleccione un tipo</option>
-                            @foreach($tipos as $tipo)
-                                <option value="{{ $tipo->id }}" {{ old('tipo_soporte_id') == $tipo->id ? 'selected' : '' }}>{{ $tipo->nombre }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
+                
                     <!-- Descripción -->
                     <div class="mb-4">
-                        <label for="descripcion" class="block text-gray-700 text-sm font-bold mb-2">Descripción</label>
-                        <textarea id="descripcion" name="descripcion" rows="5" maxlength="4000" required class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">{{ old('descripcion') }}</textarea>
+                        <x-label for="descripcion" value="{{ __('Descripción') }}" />
+                        <x-textarea id="descripcion" name="descripcion" rows="5" maxlength="4000" required class="mb-4 text-gray-700">{{ old('descripcion') }}</x-textarea>
                     </div>
-
-                    <!-- Solución -->
-                    <div class="mb-4">
-                        <label for="solucion" class="block text-gray-700 text-sm font-bold mb-2">Solución</label>
-                        <textarea id="solucion" name="solucion" rows="5" maxlength="4000" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">{{ old('solucion') }}</textarea>
-                    </div>
-
-                    <!-- Horas Hombre -->
-                    <div class="mb-4">
-                        <label for="horas_hombre" class="block text-gray-700 text-sm font-bold mb-2">Horas Hombre</label>
-                        <input type="number" step="0.01" id="horas_hombre" name="horas_hombre" value="{{ old('horas_hombre') }}" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                    </div>
-
-                    <!-- UF -->
-                    <div class="mb-4">
-                        <label for="uf" class="block text-gray-700 text-sm font-bold mb-2">UF</label>
-                        <input type="number" step="0.01" id="uf" name="uf" value="{{ old('uf') }}" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                    </div>
-
-                    <!-- Celular -->
-                    <div class="mb-4">
-                        <label for="celular" class="block text-gray-700 text-sm font-bold mb-2">Celular</label>
-                        <input type="text" id="celular" name="celular" maxlength="12" value="{{ old('celular') }}" required class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                    </div>
-
-                    <!-- Email -->
-                    <div class="mb-4">
-                        <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                        <input type="email" id="email" name="email" maxlength="45" value="{{ old('email') }}" required class="block w-full bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                    </div>
-
+                
                     <!-- Adjuntar Imágenes con Dropzone -->
                     <div class="mb-4">
-                        <label class="block text-gray-700 text-sm font-bold mb-2">Adjuntar Imágenes</label>
-                        <div id="dropzone" class="dropzone border-dashed border-2 border-gray-300 rounded-md flex items-center justify-center cursor-pointer"></div>
-                        <input type="hidden" name="soporte_id" id="soporte_id" value="">
+                        <x-label value="{{ __('Adjuntar Imágenes') }}" />
+                        <x-image-upload label="Subir Fotos del Producto" />
                     </div>
-
+                
                     <!-- Urgente -->
-                    <div class="mb-4 flex items-center">
-                        <input type="checkbox" id="urgente" name="urgente" value="1" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded" {{ old('urgente') ? 'checked' : '' }}>
-                        <label for="urgente" class="ml-2 block text-sm text-gray-900">Urgente</label>
-                    </div>
-
+                    <label for="urgente" class="mb-4 flex items-center">
+                        <x-checkbox id="urgente" name="urgente" />
+                        <span class="ms-2 text-sm text-gray-600">{{ __('Urgente') }}</span>
+                    </label>
+    
+                
                     <!-- Botones -->
-                    <div class="flex items-center justify-between">
-                        <button type="submit" id="submit-all" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Crear Soporte
-                        </button>
-                        <a href="{{ route('soportes.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                    <div class="flex items-center justify-end">
+                        <x-button class="mb-4">
+                            {{ __('Crear Soporte') }}
+                        </x-button>
+                        {{-- <a href="{{ route('soportes.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                             Atrás
-                        </a>
+                        </a> --}}
                     </div>
-
+                
                 </form>
+                
             </div>
         </div>
     </div>

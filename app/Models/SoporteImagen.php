@@ -18,7 +18,7 @@ class SoporteImagen extends Model
 
     protected $fillable = [
         'soporte_id',
-        'ruta_imagen',
+        'ruta',
     ];
 
     protected $casts = [

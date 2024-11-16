@@ -15,6 +15,9 @@ class Caja extends Model
     public $incrementing = false; // Dado que 'id' es CHAR(36)
     protected $keyType = 'string'; // La clave primaria es un string
 
+    public $timestamps = false;
+
+
     protected $fillable = [
         'id',
         'nombre',

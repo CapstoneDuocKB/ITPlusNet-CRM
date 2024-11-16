@@ -83,7 +83,7 @@ class Soporte extends Model
     }
 
     // Relación uno a muchos con SoporteImagen (un soporte tiene muchas imágenes)
-    public function soporteImagenes()
+    public function imagenes()
     {
         return $this->hasMany(SoporteImagen::class, 'soporte_id');
     }

@@ -10,6 +10,7 @@ use App\Models\DificultadSoporte;
 use App\Models\EstadoSoporte;
 use App\Models\TipoSoporte;
 use App\Models\SoporteImagen;
+use Illuminate\Support\Facades\Auth;
 
 class SoporteController
 {
@@ -35,30 +36,60 @@ class SoporteController
     // Almacenar un nuevo soporte en la base de datos
     public function store(Request $request)
     {
+        $user = Auth::user();
+    
+        // Si urgente no se marca en el formulario este será false
+        $request->merge([
+            'urgente' => $request->has('urgente') ? true : false,
+        ]);
+
+        // Validación de datos base para todos los roles
         $validatedData = $request->validate([
-            'bodega_id' => 'required|exists:bodegas,id',
-            'caja_id' => 'required|exists:cajas,id',
-            'dificultad_soporte_id' => 'required|exists:dificultades_soporte,id',
-            'estado_soporte_id' => 'required|exists:estados_soporte,id',
-            'tipo_soporte_id' => 'required|exists:tipos_soporte,id',
-            'descripcion' => 'required|string|max:4000',
-            'solucion' => 'nullable|string|max:4000',
-            'horas_hombre' => 'nullable|numeric',
-            'uf' => 'nullable|numeric',
             'celular' => 'required|string|max:12',
             'email' => 'required|email|max:45',
+            'descripcion' => 'required|string|max:4000',
             'urgente' => 'sometimes|boolean',
+            'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
     
-        // Crear el soporte
-        $soporte = new Soporte($validatedData);
-        $soporte->urgente = $request->has('urgente');
-        $soporte->save();
+        // Validación adicional si el usuario es Administrador
+        if ($user->hasRole('Administrador')) {
+            $validatedData = array_merge($validatedData, $request->validate([
+                'bodega_id' => 'required|exists:bodegas,id',
+                'caja_id' => 'required|exists:cajas,id',
+                'dificultad_soporte_id' => 'required|exists:dificultades_soporte,id',
+                'estado_soporte_id' => 'required|exists:estados_soporte,id',
+                'tipo_soporte_id' => 'required|exists:tipos_soporte,id',
+                'solucion' => 'nullable|string|max:4000',
+                'horas_hombre' => 'nullable|numeric',
+                'uf' => 'nullable|numeric',
+            ]));
+        }
     
-        // Retornar el soporte_id en la respuesta JSON
-        return response()->json(['success' => true, 'soporte_id' => $soporte->id]);
+        try {
+            // Crear el soporte
+            $soporte = Soporte::create($validatedData);
+            $soporte->urgente = $request->has('urgente');
+            $soporte->save();
+    
+            // Guardar las imágenes del soporte
+            if ($request->hasFile('imagenes')) {
+                foreach ($request->file('imagenes') as $imagen) {
+                    $path = $imagen->store('soportes', 'public');
+    
+                    SoporteImagen::create([
+                        'soporte_id' => $soporte->id,
+                        'ruta' => $path,
+                    ]);
+                }
+            }
+    
+            return response()->json(['success' => true, 'soporte_id' => $soporte->id]);
+    
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Error al crear el soporte. Por favor, inténtalo de nuevo.'], 500);
+        }
     }
-    
 
     // Mostrar detalles de un soporte específico
     public function show($id)
