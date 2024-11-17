@@ -37,7 +37,7 @@
                             <td class="px-6 py-4 border-b">{{ $soporte->urgente ? 'Sí' : 'No' }}</td>
                             <td class="px-6 py-4 border-b">
                                 <a href="{{ route('soportes.show', $soporte->id) }}" class="text-blue-600 hover:text-blue-900">Ver</a> |
-                                <a href="{{ route('soportes.edit', $soporte->id) }}" class="text-indigo-600 hover:text-indigo-900">Editar</a> |
+                                <a href="{{ route('soportes.edit', $soporte->id) }}" class="text-indigo-600 hover:text-indigo-900">Atender soporte</a> |
                                 <form action="{{ route('soportes.destroy', $soporte->id) }}" method="POST" style="display:inline-block">
                                     @csrf
                                     @method('DELETE')
