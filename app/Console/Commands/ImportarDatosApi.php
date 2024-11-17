@@ -46,13 +46,13 @@ class ImportarDatosApi extends Command
             $this->info('Cajas importadas exitosamente.');
 
             // Importar Usuarios
-            $this->info('Importando Usuarios...');
-            $usuarios = $this->obtenerDatosApi('https://migestor.cl/api-shivsai/usuario.php');
+            // $this->info('Importando Usuarios...');
+            // $usuarios = $this->obtenerDatosApi('https://migestor.cl/api-shivsai/usuario.php');
 
-            foreach ($usuarios as $data) {
-                Usuario::updateOrCreateFromApiData($data);
-            }
-            $this->info('Usuarios importados exitosamente.');
+            // foreach ($usuarios as $data) {
+            //     Usuario::updateOrCreateFromApiData($data);
+            // }
+            // $this->info('Usuarios importados exitosamente.');
 
             $this->info('Proceso ETL completado con éxito.');
             return 0; // Exit code 0 significa éxito

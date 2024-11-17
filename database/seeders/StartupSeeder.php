@@ -5,10 +5,11 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Usuario;
 use Spatie\Permission\Models\Role;
+use App\Models\EstadoSoporte; // Importar el modelo para estados de soporte
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class RolesAndUsersSeeder extends Seeder
+class StartupSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -37,22 +38,28 @@ class RolesAndUsersSeeder extends Seeder
                 'empresa_id' => null, // Ajusta según tus necesidades
                 'activo' => true,
                 'id' => Str::uuid()->toString(), // Genera un UUID
+                'sucursal_id' => 1,
+                'caja_id' => 12,
+                'bodega_id' => 1,
             ]
         );
         $admin->assignRole('Administrador');
 
         // 2. Soporte Técnico
         $soporte = Usuario::firstOrCreate(
-            ['email' => 'soporte@itplusnet.com'],
+            ['email' => 'lh.espinoza@duocuc.cl'],
             [
-                'rut' => '12.345.678-9',
-                'name' => 'Juan Perez',
+                'rut' => '21.000.501-3',
+                'name' => 'Lhian Espinoza',
                 'password' => Hash::make('password123'),
-                'telefono' => '0987654321',
+                'telefono' => '+56972192537',
                 'direccion_id' => null,
                 'empresa_id' => null,
                 'activo' => true,
                 'id' => Str::uuid()->toString(),
+                'sucursal_id' => 1,
+                'caja_id' => 12,
+                'bodega_id' => 1,
             ]
         );
         $soporte->assignRole('SoporteTecnico');
@@ -69,8 +76,32 @@ class RolesAndUsersSeeder extends Seeder
                 'empresa_id' => null,
                 'activo' => true,
                 'id' => Str::uuid()->toString(),
+                'sucursal_id' => 1,
+                'caja_id' => 12,
+                'bodega_id' => 1,
             ]
         );
         $cliente->assignRole('Cliente');
+
+        // Crear estados de soporte si no existen
+        $estadosSoporte = [
+            'ABIERTO',
+            'PENDIENTE',
+            'EN DESARROLLO',
+            'CERRADO',
+            'POR COBRAR',
+            'COBRADO',
+            'GARANTIA'
+        ];
+
+        foreach ($estadosSoporte as $estado) {
+            EstadoSoporte::firstOrCreate(
+                ['nombre' => $estado],
+                [
+                    'id' => Str::uuid()->toString(), // Genera un UUID
+                    'descripcion' => null // Dejar la descripción en NULL
+                ]
+            );
+        }
     }
 }

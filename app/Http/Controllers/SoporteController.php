@@ -11,6 +11,7 @@ use App\Models\EstadoSoporte;
 use App\Models\TipoSoporte;
 use App\Models\SoporteImagen;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class SoporteController
 {
@@ -24,20 +25,18 @@ class SoporteController
     // Mostrar el formulario para crear un nuevo soporte
     public function create()
     {
-        $bodegas = Bodega::all();
-        $cajas = Caja::all();
-        $dificultades = DificultadSoporte::all();
-        $estados = EstadoSoporte::all();
-        $tipos = TipoSoporte::all();
-
-        return view('soportes.create', compact('bodegas', 'cajas', 'dificultades', 'estados', 'tipos'));
+        return view('soportes.create');
     }
 
     // Almacenar un nuevo soporte en la base de datos
     public function store(Request $request)
     {
         $user = Auth::user();
-    
+
+        $sucursal = $user->sucursal;
+        $bodega = $user->bodega;
+        $caja = $user->caja;
+            
         // Si urgente no se marca en el formulario este será false
         $request->merge([
             'urgente' => $request->has('urgente') ? true : false,
@@ -68,8 +67,19 @@ class SoporteController
     
         try {
             // Crear el soporte
-            $soporte = Soporte::create($validatedData);
-            $soporte->urgente = $request->has('urgente');
+            // $soporte = Soporte::create($validatedData);
+            $soporte = new Soporte();
+            $soporte->id = Str::uuid()->toString();
+            $soporte->descripcion = $request->input('descripcion');
+            $soporte->celular = $request->input('celular');
+            $soporte->email = $request->input('email');
+            $soporte->urgente = $request->input('urgente');
+            $soporte->bodega_id = $bodega ? $bodega->id : null;
+            $soporte->caja_id = $caja ? $caja->id : null;
+            $soporte->sucursal_id = $sucursal ? $sucursal->id : null;
+
+            dump($soporte);
+
             $soporte->save();
     
             // Guardar las imágenes del soporte
@@ -87,7 +97,7 @@ class SoporteController
             return response()->json(['success' => true, 'soporte_id' => $soporte->id]);
     
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Error al crear el soporte. Por favor, inténtalo de nuevo.'], 500);
+            return response()->json(['success' => false, 'message' => 'Error al crear el soporte. Por favor, inténtalo de nuevo.',$e], 500);
         }
     }
 

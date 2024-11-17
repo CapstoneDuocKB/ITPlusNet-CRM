@@ -18,6 +18,8 @@ class Soporte extends Model
 
     protected $fillable = [
         'bodega_id',
+        'sucursal_id',
+        'caja_id',
         'caja_id',
         'celular',
         'descripcion',
@@ -57,6 +59,11 @@ class Soporte extends Model
     }
 
     // Relaciones con otros modelos
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class, 'sucursal_id');
+    }
+    
     public function bodega()
     {
         return $this->belongsTo(Bodega::class, 'bodega_id');

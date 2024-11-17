@@ -12,8 +12,10 @@ CREATE TABLE dificultades_soporte (
 CREATE TABLE estados_soporte (
   id CHAR(36) NOT NULL PRIMARY KEY,
   nombre VARCHAR(255) NOT NULL,
-  descripcion VARCHAR(255) NOT NULL
+  descripcion VARCHAR(255) 
 );
+
+
 
 CREATE TABLE tipos_soporte (
   id CHAR(36) NOT NULL PRIMARY KEY,
@@ -82,11 +84,11 @@ CREATE TABLE cajas (
 -- Crear la tabla usuarios
 CREATE TABLE usuarios (
     id CHAR(36) NOT NULL PRIMARY KEY,
-    rut VARCHAR(12),
+    rut VARCHAR(12) NOT NULL,
     name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) UNIQUE,
+    email VARCHAR(255) NOT NULL UNIQUE,
     email_verified_at TIMESTAMP NULL,
-    password VARCHAR(255) ,
+    password VARCHAR(255) NOT NULL,
     remember_token VARCHAR(100) NULL,
     telefono VARCHAR(15) NULL,
     direccion_id CHAR(36) NULL,
@@ -111,7 +113,19 @@ CREATE TABLE password_reset_tokens (
     created_at TIMESTAMP NULL
 );
 
--- Crear la tabla soportes
+-- Crear la tabla sessions
+CREATE TABLE sessions (
+    id VARCHAR(255) NOT NULL PRIMARY KEY,
+    user_id CHAR(36) NULL,
+    ip_address VARCHAR(45) NULL,
+    user_agent TEXT NULL,
+    payload LONGTEXT NOT NULL,
+    last_activity INT NOT NULL,
+    INDEX (user_id),
+    INDEX (last_activity),
+    FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE SET NULL
+);
+
 CREATE TABLE soportes (
   id CHAR(36) NOT NULL PRIMARY KEY,
   numero_soporte INT NOT NULL AUTO_INCREMENT UNIQUE,
@@ -125,10 +139,12 @@ CREATE TABLE soportes (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   bodega_id CHAR(36) NOT NULL,
+  sucursal_id CHAR(36) NOT NULL,
   caja_id CHAR(36) NOT NULL,
   dificultad_soporte_id CHAR(36),
   estado_soporte_id CHAR(36) NOT NULL,
   tipo_soporte_id CHAR(36),
+  FOREIGN KEY (sucursal_id) REFERENCES sucursales(id),
   FOREIGN KEY (bodega_id) REFERENCES bodegas(id),
   FOREIGN KEY (caja_id) REFERENCES cajas(id),
   FOREIGN KEY (dificultad_soporte_id) REFERENCES dificultades_soporte(id),
@@ -139,7 +155,7 @@ CREATE TABLE soportes (
 CREATE TABLE soporte_imagenes (
   id CHAR(36) NOT NULL PRIMARY KEY,
   soporte_id CHAR(36) NOT NULL,
-  ruta VARCHAR(255) NOT NULL,
+  ruta_imagen VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (soporte_id) REFERENCES soportes(id) ON DELETE CASCADE
 );
