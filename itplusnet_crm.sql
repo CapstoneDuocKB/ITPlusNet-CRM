@@ -1,3 +1,5 @@
+DROP DATABASE crm_itplusnet;
+
 CREATE DATABASE crm_itplusnet;
 
 USE crm_itplusnet;
@@ -14,7 +16,6 @@ CREATE TABLE estados_soporte (
   nombre VARCHAR(255) NOT NULL,
   descripcion VARCHAR(255) 
 );
-
 
 
 CREATE TABLE tipos_soporte (

@@ -43,7 +43,7 @@ class StartupSeeder extends Seeder
                 'bodega_id' => 1,
             ]
         );
-        $admin->assignRole('Administrador');
+        $admin->assignRole('Cliente');
 
         // 2. Soporte Técnico
         $soporte = Usuario::firstOrCreate(

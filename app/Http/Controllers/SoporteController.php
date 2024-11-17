@@ -70,6 +70,7 @@ class SoporteController
             // $soporte = Soporte::create($validatedData);
             $soporte = new Soporte();
             $soporte->id = Str::uuid()->toString();
+            $soporte->estado_soporte_id = EstadoSoporte::where('nombre', 'ABIERTO')->first()->id;
             $soporte->descripcion = $request->input('descripcion');
             $soporte->celular = $request->input('celular');
             $soporte->email = $request->input('email');
