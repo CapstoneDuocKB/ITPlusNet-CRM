@@ -46,7 +46,7 @@
                         <x-textarea id="descripcion" name="descripcion" rows="5" maxlength="4000" required class="mb-4 text-gray-700">{{ old('descripcion') }}</x-textarea>
                     </div>
                 
-                    <!-- Adjuntar Imágenes con Dropzone -->
+                    <!-- Adjuntar Imágenes -->
                     <div class="mb-4">
                         <x-label value="{{ __('Adjuntar Imágenes') }}" />
                         <x-image-upload label="Subir Fotos del Producto" />
@@ -61,7 +61,8 @@
                 
                     <!-- Botones -->
                     <div class="flex items-center justify-end">
-                        <x-button class="mb-4">
+                        <x-button id="crear-soporte-btn" class="mb-4">
+                            <span id="crear-soporte-spinner" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" style="display: none;"></span>
                             {{ __('Crear Soporte') }}
                         </x-button>
                         {{-- <a href="{{ route('soportes.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
@@ -75,163 +76,366 @@
         </div>
     </div>
 
-    <!-- Configuración de Dropzone -->
-    @push('scripts')
-    <!-- Incluye las librerías de Dropzone desde CDN -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Deshabilita el auto-descubrimiento de Dropzone
-            Dropzone.autoDiscover = false;
-
-            // Configura Dropzone
-            var myDropzone = new Dropzone("#dropzone", {
-                url: "{{ route('soportes.upload') }}",
-                autoProcessQueue: false, // Procesar la cola manualmente
-                uploadMultiple: true,
-                parallelUploads: 5,
-                maxFiles: 5,
-                acceptedFiles: 'image/*',
-                addRemoveLinks: true,
-                dictRemoveFile: 'Eliminar',
-                dictCancelUpload: 'Cancelar',
-                dictDefaultMessage: 'Arrastra aquí tus imágenes para subirlas',
-                headers: {
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                },
-                init: function() {
-                    var submitButton = document.querySelector("#submit-all");
-                    var soporteForm = document.querySelector("#soporte-form");
-                    var soporteIdInput = document.querySelector("#soporte_id");
-
-                    // Manejar el evento de clic en el botón de envío
-                    submitButton.addEventListener("click", function(e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        // Validar el formulario antes de procesar la cola de Dropzone
-                        if (soporteForm.checkValidity()) {
-                            // Crear una instancia de FormData y agregar los datos del formulario
-                            var formData = new FormData(soporteForm);
-
-                            // Enviar el formulario vía AJAX para crear el soporte
-                            fetch("{{ route('soportes.store') }}", {
-                                method: "POST",
-                                headers: {
-                                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
-                                    'Accept': 'application/json'
-                                },
-                                body: formData
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    // Asignar el soporte_id al campo oculto
-                                    soporteIdInput.value = data.soporte_id;
-
-                                    // Procesar la cola de Dropzone para subir las imágenes
-                                    myDropzone.processQueue();
-                                } else {
-                                    alert('Error al crear el soporte.');
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                alert('Error al crear el soporte.');
-                            });
-                        } else {
-                            // Mostrar errores de validación del formulario
-                            soporteForm.reportValidity();
-                        }
-                    });
-
-                    // Añadir el soporte_id al FormData de cada archivo antes de enviarlo
-                    this.on("sendingmultiple", function(data, xhr, formData) {
-                        formData.append("soporte_id", soporteIdInput.value);
-                    });
-
-                    // Manejar el evento de éxito en la carga de imágenes
-                    this.on("successmultiple", function(files, response) {
-                        // Opcional: Redirigir o mostrar un mensaje de éxito
-                        window.location.href = "{{ route('soportes.index') }}";
-                    });
-
-                    // Manejar errores en la carga de imágenes
-                    this.on("errormultiple", function(files, response) {
-                        alert('Error al subir las imágenes.');
-                    });
-
-                    // Manejar el evento de agregar un archivo
-                    this.on("addedfile", function(file) {
-                        var defaultMessage = document.querySelector('.dz-message');
-                        if (defaultMessage) {
-                            defaultMessage.style.display = 'none';
-                        }
-                    });
-
-                    // Manejar el evento de eliminar un archivo
-                    this.on("removedfile", function(file) {
-                        if (this.files.length === 0) {
-                            var defaultMessage = document.querySelector('.dz-message');
-                            if (defaultMessage) {
-                                defaultMessage.style.display = 'block';
-                            }
-                        }
-                    });
-                }
-            });
-        });
-    </script>
-
-    <!-- Estilos CSS personalizados para Dropzone -->
+    <!-- Estilos personalizados para los mensajes, botones y spinner -->
     <style>
-        /* Ocultar detalles innecesarios de Dropzone */
-        .dz-size, .dz-filename, .dz-error-message {
-            display: none !important;
+        /* Contenedor general de los mensajes */
+        #chat-messages {
+            max-height: 400px; /* Ajusta según tus necesidades */
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
         }
 
-        /* Estilo personalizado para el botón de eliminar */
-        .dz-remove {
-            display: block;
-            padding: 5px 10px;
-            color: red;
-            border: 2px solid red;
-            background-color: transparent;
-            border-radius: 4px;
-            text-align: center;
-            width: 80px;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 0 auto; /* Centrar el botón */
-            margin-top: 0; /* Reducir el espacio entre la imagen y el botón */
-        }
-
-        .dz-remove:hover {
-            background-color: red;
-            color: white;
-        }
-
-        /* Ajustes de vista previa */
-        .dz-preview {
+        /* Estilo para mensajes del bot */
+        .chat-message.bot {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 0; /* Eliminar espacio adicional */
+            align-items: flex-start;
+            margin-bottom: 10px;
         }
 
-        .dz-image {
-            margin-bottom: 0; /* Eliminar espacio entre imagen y botón */
+        .chat-message.bot .message-content {
+            background-color: #e2e3e5; /* Gris claro para el bot */
+            color: #000;
+            padding: 5px 10px; /* Aumentar el padding vertical y horizontal */
+            border-radius: 15px;
+            max-width: 70%; /* Limita el ancho máximo para que sean más cortos */
+            word-wrap: break-word;
+            position: relative; /* Para posicionamiento relativo si es necesario */
         }
 
-        .dz-details {
-            display: block;
+        /* Estilo para mensajes del usuario */
+        .chat-message.user {
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+
+        .chat-message.user .message-content {
+            background-color: #84cc16; /* Color lime-500 de Tailwind */
+            color: #fff;
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 70%; /* Limita el ancho máximo para que sean más cortos */
+            word-wrap: break-word;
+        }
+
+        /* Opcional: Ajustar la fuente y el tamaño del texto */
+        .message-content {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Botón personalizado con clases Tailwind */
+        .btn-lime-500 {
+            background-color: #84cc16; /* lime-500 */
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-lime-500:hover {
+            background-color: #65a30d; /* lime-600 */
+        }
+
+        .btn-lime-500:focus {
+            background-color: #65a30d; /* lime-600 */
+            box-shadow: 0 0 0 0.2rem rgba(132, 204, 22, 0.5);
+        }
+
+        .btn-lime-500:active {
+            background-color: #4d7c0f; /* lime-700 */
+        }
+
+        /* Estilos para el indicador de carga (spinner) */
+        .loading-dots {
+            display: flex;
+            align-items: center; /* Centrar verticalmente */
+            justify-content: center; /* Centrar horizontalmente */
+            height: 24px; /* Asegura que el contenedor tenga suficiente altura */
+        }
+
+        .loading-dots .dot {
+            width: 8px;
+            height: 8px;
+            margin: 0 4px; /* Margen horizontal */
+            background-color: #84cc16; /* lime-500 */
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .loading-dots .dot:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .loading-dots .dot:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-8px);
+            }
         }
     </style>
 
-    @endpush
 
-    @stack('scripts')
+    <!-- Modal para el chat con ITPlusBot -->
+    <div class="modal fade" id="chatModal" tabindex="-1" aria-labelledby="chatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg"><!-- Aumentamos el tamaño del modal -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="chatModalLabel">Chat con ITPlusBot</h5>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenedor de la imagen y el texto -->
+                    <div class="container">
+                        <div class="row">
+                            <!-- Columna de la imagen -->
+                            <div class="col-md-3 d-flex align-items-center justify-content-center">
+                                <img src="{{ asset('images/itplusbot.webp') }}" class="img-fluid" alt="itplusbot">
+                            </div>
+                            <!-- Columna del texto -->
+                            <div class="col-md-9 d-flex align-items-center">
+                                <p class="mb-0">
+                                    Hola, soy <strong>ITPlusBot</strong>, tu asistente virtual especializado en ayudarte a redactar tu problema de la forma más clara y concisa posible.
+                                    Estoy aquí para entender y parafrasear tu situación, asegurándome de que el equipo técnico pueda brindarte la mejor asistencia posible.
+                                    Ten en cuenta que este chat será guardado para asegurar un mejor seguimiento de tu caso.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Resto del contenido del modal -->
+                    <div id="chat-messages" class="mb-4 text-gray-700">
+                        <!-- Aquí se cargarán los mensajes del chat -->
+                    </div>
+                    <div class="flex">
+                        <input type="text" id="chat-input" class="flex-grow border border-lime-300 focus:border-lime-500 focus:ring-lime-500 p-2 mr-2 rounded" placeholder="Escribe tu mensaje...">
+                        <button id="send-chat-btn" class="px-4 py-2 bg-lime-500 text-white rounded hover:bg-lime-600 focus:bg-lime-600 active:bg-lime-700">Enviar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Scripts -->
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    var soporteForm = document.querySelector("#soporte-form");
+    var crearSoporteBtn = document.getElementById("crear-soporte-btn");
+    var crearSoporteSpinner = document.getElementById("crear-soporte-spinner");
+    var isSubmitting = false; // Flag para evitar múltiples envíos
+    var loadingMessageCounter = 0; // Contador para IDs únicos
+
+    // Agregar el event listener solo una vez
+    soporteForm.addEventListener("submit", handleFormSubmit);
+
+    // Manejar el evento de envío del formulario usando async/await
+    async function handleFormSubmit(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (isSubmitting) {
+            return; // Si ya se está enviando, no permitir más envíos
+        }
+
+        isSubmitting = true;
+
+        // Mostrar el spinner y deshabilitar el botón
+        crearSoporteSpinner.style.display = 'inline-block';
+        crearSoporteBtn.disabled = true;
+
+        try {
+            if (soporteForm.checkValidity()) {
+                var formData = new FormData(soporteForm);
+
+                // Enviar el formulario vía AJAX
+                let response = await fetch("{{ route('soportes.store') }}", {
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                        'Accept': 'application/json'
+                    },
+                    body: formData
+                });
+
+                let data = await response.json();
+
+                if (data.success) {
+                    // Llamar a ChatGPT para obtener una respuesta
+                    let chatResponse = await fetch("{{ route('chat.ask') }}", {
+                        method: "POST",
+                        headers: {
+                            'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            message: data.soporte.descripcion
+                        })
+                    });
+
+                    let chatData = await chatResponse.json();
+
+                    if (chatData.response) {
+                        // Inicializar el modal con opciones para no cerrarlo
+                        var chatModal = new bootstrap.Modal(document.getElementById('chatModal'), {
+                            backdrop: 'static',
+                            keyboard: false
+                        });
+
+                        // Ocultar el botón de cerrar dentro del modal
+                        var closeButton = document.querySelector('#chatModal .btn-close');
+                        if (closeButton) {
+                            closeButton.style.display = 'none';
+                        }
+
+                        chatModal.show();
+
+                        // Añadir el mensaje inicial de respuesta del bot al contenedor de mensajes
+                        addMessageToChat('bot', chatData.response);
+                    }
+                } else {
+                    alert('Error al crear el soporte: ' + data.message);
+                }
+            } else {
+                soporteForm.reportValidity();
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error al crear el soporte.');
+        } finally {
+            // Ocultar el spinner y habilitar el botón después de finalizar la solicitud
+            crearSoporteSpinner.style.display = 'none';
+            crearSoporteBtn.disabled = false;
+            isSubmitting = false;
+        }
+    }
+
+    // Función para agregar mensajes al chat
+    function addMessageToChat(role, content) {
+        var chatMessages = document.getElementById('chat-messages');
+        var messageElement = document.createElement('div');
+        var messageContent = document.createElement('div');
+
+        // Asignar la clase base
+        messageContent.classList.add('message-content');
+
+        if (role === 'user') {
+            messageElement.classList.add('chat-message', 'user');
+            messageContent.innerText = content;
+        } else if (role === 'bot') {
+            messageElement.classList.add('chat-message', 'bot');
+            messageContent.innerText = content;
+        }
+
+        messageElement.appendChild(messageContent);
+        chatMessages.appendChild(messageElement);
+
+        // Desplazar automáticamente hacia abajo para ver el mensaje más reciente
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Función para agregar el indicador de carga del bot
+    function addLoadingMessage() {
+        loadingMessageCounter++; // Incrementar el contador para un ID único
+        var currentLoadingMessageID = 'bot-loading-message-' + loadingMessageCounter;
+
+        var chatMessages = document.getElementById('chat-messages');
+        var messageElement = document.createElement('div');
+        var messageContent = document.createElement('div');
+
+        // Asignar las clases
+        messageElement.classList.add('chat-message', 'bot');
+        messageElement.id = currentLoadingMessageID; // Asignar un ID único
+
+        messageContent.classList.add('message-content');
+        messageContent.innerHTML = `
+            <div class="loading-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+            </div>
+        `;
+
+        messageElement.appendChild(messageContent);
+        chatMessages.appendChild(messageElement);
+
+        // Desplazar automáticamente hacia abajo para ver el mensaje más reciente
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        return currentLoadingMessageID; // Devolver el ID único
+    }
+
+    // Manejar el envío de mensajes adicionales en el chat
+    document.getElementById('send-chat-btn').addEventListener('click', async function () {
+        var chatInput = document.getElementById('chat-input');
+
+        if (chatInput.value.trim() !== '') {
+            var userMessage = chatInput.value.trim();
+
+            // Añadir el mensaje del usuario al chat
+            addMessageToChat('user', userMessage);
+
+            // Vaciar el campo de entrada después de enviar el mensaje
+            chatInput.value = '';
+
+            // Añadir el mensaje de carga del bot y obtener su ID único
+            var loadingMessageID = addLoadingMessage();
+
+            try {
+                let response = await fetch("{{ route('chat.ask') }}", {
+                    method: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: userMessage
+                    })
+                });
+
+                let chatData = await response.json();
+
+                if (chatData.response) {
+                    // Reemplazar el mensaje de carga con la respuesta del bot
+                    var loadingMessage = document.getElementById(loadingMessageID);
+                    if (loadingMessage) {
+                        var messageContent = loadingMessage.querySelector('.message-content');
+                        messageContent.innerText = chatData.response;
+
+                        // Ajustar el scroll después de actualizar el mensaje
+                        var chatMessages = document.getElementById('chat-messages');
+                        chatMessages.scrollTop = chatMessages.scrollHeight;
+                    } else {
+                        // Si no se encuentra el mensaje de carga, simplemente añadir el mensaje del bot
+                        addMessageToChat('bot', chatData.response);
+                    }
+                }
+            } catch (error) {
+                console.error('Error en el chat:', error);
+                alert('Error al interactuar con el chat.');
+                // Opcional: eliminar el mensaje de carga si hay error
+                var loadingMessage = document.getElementById(loadingMessageID);
+                if (loadingMessage) {
+                    loadingMessage.remove();
+
+                    // Ajustar el scroll después de eliminar el mensaje de carga
+                    var chatMessages = document.getElementById('chat-messages');
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+        }
+    });
+});
+</script>
+@endpush
+    
 
 </x-app-layout>

@@ -30,30 +30,32 @@ class SoporteController
 
     // Almacenar un nuevo soporte en la base de datos
     public function store(Request $request)
-    {
+{
+    try {
         $user = Auth::user();
-
         $sucursal = $user->sucursal;
         $bodega = $user->bodega;
         $caja = $user->caja;
-            
+
         // Si urgente no se marca en el formulario este será false
         $request->merge([
             'urgente' => $request->has('urgente') ? true : false,
         ]);
 
         // Validación de datos base para todos los roles
-        $validatedData = $request->validate([
-            'celular' => 'required|string|max:12',
-            'email' => 'required|email|max:45',
-            'descripcion' => 'required|string|max:4000',
-            'urgente' => 'sometimes|boolean',
-            'imagenes.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
-    
+        if ($user->hasRole('Cliente')) {
+            $validatedData = $request->validate([
+                'celular' => 'required|string|max:12',
+                'email' => 'required|email|max:45',
+                'descripcion' => 'required|string|max:4000',
+                'urgente' => 'sometimes|boolean',
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+        }
+
         // Validación adicional si el usuario es Administrador
         if ($user->hasRole('Administrador')) {
-            $validatedData = array_merge($validatedData, $request->validate([
+            $validatedData = array_merge($validatedData ?? [], $request->validate([
                 'bodega_id' => 'required|exists:bodegas,id',
                 'caja_id' => 'required|exists:cajas,id',
                 'dificultad_soporte_id' => 'required|exists:dificultades_soporte,id',
@@ -64,43 +66,44 @@ class SoporteController
                 'uf' => 'nullable|numeric',
             ]));
         }
-    
-        try {
-            // Crear el soporte
-            // $soporte = Soporte::create($validatedData);
-            $soporte = new Soporte();
-            $soporte->id = Str::uuid()->toString();
-            $soporte->estado_soporte_id = EstadoSoporte::where('nombre', 'ABIERTO')->first()->id;
-            $soporte->descripcion = $request->input('descripcion');
-            $soporte->celular = $request->input('celular');
-            $soporte->email = $request->input('email');
-            $soporte->urgente = $request->input('urgente');
-            $soporte->bodega_id = $bodega ? $bodega->id : null;
-            $soporte->caja_id = $caja ? $caja->id : null;
-            $soporte->sucursal_id = $sucursal ? $sucursal->id : null;
 
-            dump($soporte);
+        // Crear el soporte
+        $soporte = new Soporte();
+        $soporte->id = Str::uuid()->toString();
+        $soporte->estado_soporte_id = EstadoSoporte::where('nombre', 'ABIERTO')->first()->id;
+        $soporte->descripcion = $request->input('descripcion');
+        $soporte->celular = $request->input('celular');
+        $soporte->email = $request->input('email');
+        $soporte->urgente = $request->input('urgente');
+        $soporte->bodega_id = $bodega ? $bodega->id : null;
+        $soporte->caja_id = $caja ? $caja->id : null;
+        $soporte->sucursal_id = $sucursal ? $sucursal->id : null;
 
-            $soporte->save();
-    
-            // Guardar las imágenes del soporte
-            if ($request->hasFile('imagenes')) {
-                foreach ($request->file('imagenes') as $imagen) {
-                    $path = $imagen->store('soportes', 'public');
-    
-                    SoporteImagen::create([
-                        'soporte_id' => $soporte->id,
-                        'ruta' => $path,
-                    ]);
-                }
+        $soporte->save();
+
+        // Guardar las imágenes del soporte
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $imagen) {
+                $path = $imagen->store('soportes', 'public');
+
+                SoporteImagen::create([
+                    'soporte_id' => $soporte->id,
+                    'ruta' => $path,
+                ]);
             }
-    
-            return response()->json(['success' => true, 'soporte_id' => $soporte->id]);
-    
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Error al crear el soporte. Por favor, inténtalo de nuevo.',$e], 500);
         }
+
+        // Retornar el resultado del soporte creado
+        return response()->json([
+            'success' => true,
+            'soporte' => $soporte,
+            'imagenes' => $soporte->imagenes,
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['success' => false, 'message' => 'Error al crear el soporte. Por favor, inténtalo de nuevo.', 'error' => $e->getMessage()], 500);
     }
+}
+    
 
     // Mostrar detalles de un soporte específico
     public function show($id)

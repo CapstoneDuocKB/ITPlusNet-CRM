@@ -13,15 +13,14 @@ $maxWidth = [
 @endphp
 
 <div
-    x-data="{ show: @entangle($attributes->wire('model')) }"
-    x-on:close.stop="show = false"
-    x-on:keydown.escape.window="show = false"
+    x-data="{ show: false }"
     x-show="show"
     id="{{ $id }}"
-    class="jetstream-modal fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50"
+    class="fixed inset-0 overflow-y-auto px-4 py-6 sm:px-0 z-50"
     style="display: none;"
 >
-    <div x-show="show" class="fixed inset-0 transform transition-all" x-on:click="show = false" x-transition:enter="ease-out duration-300"
+    <div x-show="show" class="fixed inset-0 transform transition-all" x-on:click="show = false" 
+                    x-transition:enter="ease-out duration-300"
                     x-transition:enter-start="opacity-0"
                     x-transition:enter-end="opacity-100"
                     x-transition:leave="ease-in duration-200"
@@ -38,6 +37,22 @@ $maxWidth = [
                     x-transition:leave="ease-in duration-200"
                     x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100"
                     x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
-        {{ $slot }}
+        <div class="px-6 py-4">
+            <!-- Título del Modal -->
+            <h2 class="text-lg font-medium text-gray-900">
+                {{ $title ?? 'Chat con ITPlusBot' }}
+            </h2>
+        </div>
+
+        <div class="px-6 py-4">
+            <!-- Contenido del Modal -->
+            {{ $slot }}
+        </div>
+
+        <div class="px-6 py-4 bg-gray-100 text-right">
+            <button x-on:click="show = false" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Cerrar
+            </button>
+        </div>
     </div>
 </div>

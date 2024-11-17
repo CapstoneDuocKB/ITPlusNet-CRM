@@ -13,6 +13,7 @@ class SoporteImagen extends Model
     protected $table = 'soporte_imagenes'; // Laravel sabrá que corresponde a la tabla soporte_imagenes
 
     public $incrementing = false;
+    public $timestamps = false;
 
     protected $keyType = 'string';
 
