@@ -22,13 +22,15 @@ Route::get('/', function () {
 });
 
 // Rutas para autenticación y permisos
-Route::middleware(['auth'])->group(function () {  
-    Route::get('/soportes/create', [SoporteController::class, 'create'])->name('soportes.create');
-    Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
-    Route::post('/soportes', [SoporteController::class, 'store'])->name('soportes.store');
-    Route::get('/soportes', [SoporteController::class, 'index'])->name('soportes.index');
-    Route::get('/soportes/read', [SoporteController::class, 'read'])->name('soportes.read');
-});
+// Route::middleware(['auth'])->group(function () {  
+//     Route::get('/soportes/create', [SoporteController::class, 'create'])->name('soportes.create');
+//     Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
+//     Route::post('/soportes', [SoporteController::class, 'store'])->name('soportes.store');
+//     Route::get('/soportes/index', [SoporteController::class, 'index'])->name('soportes.index');
+//     Route::get('/soportes/read', [SoporteController::class, 'read'])->name('soportes.read');
+//     Route::get('/soportes/show', [SoporteController::class, 'show'])->name('soportes.show');
+
+// });
 
 // Ruta para el formulario inicial del chat
 Route::get('/chat', [ChatGPTController::class, 'showChat'])->name('chat.show');
@@ -40,6 +42,8 @@ Route::post('/chat', [ChatGPTController::class, 'askChatGPT'])->name('chat.ask')
 Route::post('/soporte', [SoporteController::class, 'store'])->name('soporte.store');
 // Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
 // Route::resource('soportes', SoporteController::class);
+Route::resource('soportes', SoporteController::class);
+
 
 Route::resource('bodegas', BodegasController::class);
 
