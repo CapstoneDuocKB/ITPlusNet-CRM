@@ -7,9 +7,11 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <a href="{{ route('soportes.create') }}" class="mb-4 inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-700">
-                Crear Nuevo Soporte
-            </a>
+            @if(Auth::check() && Auth::user()->hasRole('Cliente'))
+                <a href="{{ route('soportes.create') }}" class="mb-4 inline-flex items-center px-4 py-2 bg-lime-500 border border-transparent rounded-md font-semibold text-white hover:bg-lime-600">
+                    Crear Nuevo Soporte
+                </a>
+            @endif
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
                 @if(session('success'))
                     <div class="mb-4 text-green-600">
@@ -32,12 +34,15 @@
                         <tr>
                             <td class="px-6 py-4 border-b">{{ $soporte->numero_soporte }}</td>
                             <td class="px-6 py-4 border-b">{{ Str::limit($soporte->descripcion, 50) }}</td>
-                            <td class="px-6 py-4 border-b">{{ $soporte->estadoSoporte->nombre ?? 'N/A' }}</td>
-                            <td class="px-6 py-4 border-b">{{ $soporte->tipoSoporte->nombre ?? 'N/A' }}</td>
+                            <td class="px-6 py-4 border-b">{{ $soporte->estadoSoporte->nombre ?? 'Sin Definir' }}</td>
+                            <td class="px-6 py-4 border-b">{{ $soporte->tipoSoporte->nombre ?? 'Sin Definir' }}</td>
                             <td class="px-6 py-4 border-b">{{ $soporte->urgente ? 'Sí' : 'No' }}</td>
                             <td class="px-6 py-4 border-b">
                                 <a href="{{ route('soportes.show', $soporte->id) }}" class="text-blue-600 hover:text-blue-900">Ver</a> |
-                                <a href="{{ route('soportes.edit', $soporte->id) }}" class="text-indigo-600 hover:text-indigo-900">Atender soporte</a> |
+                                {{-- @if(Auth::check() && Auth::user()->hasRole('SoporteTecnico')) --}}
+                                @if(Auth::check() && Auth::user()->hasRole('Cliente'))
+                                    <a href="{{ route('soportes.edit', $soporte->id) }}" class="text-indigo-600 hover:text-indigo-900">Atender soporte</a> |
+                                @endif
                                 <form action="{{ route('soportes.destroy', $soporte->id) }}" method="POST" style="display:inline-block">
                                     @csrf
                                     @method('DELETE')

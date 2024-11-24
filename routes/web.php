@@ -39,7 +39,7 @@ Route::get('/chat', [ChatGPTController::class, 'showChat'])->name('chat.show');
 Route::post('/chat', [ChatGPTController::class, 'askChatGPT'])->name('chat.ask');
 
 // Ruta para crear un soporte (el controlador SoporteController manejará la creación del soporte y luego redirigirá al chat)
-Route::post('/soporte', [SoporteController::class, 'store'])->name('soporte.store');
+Route::post('/soportes', [SoportesController::class, 'store'])->name('soportes.store')->middleware('auth');
 // Route::post('/soportes/upload', [SoporteController::class, 'upload'])->name('soportes.upload');
 // Route::resource('soportes', SoporteController::class);
 Route::resource('soportes', SoporteController::class);

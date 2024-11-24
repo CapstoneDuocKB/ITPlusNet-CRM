@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class EstadoSoporte extends Model
+class EstadoCobranza extends Model
 {
     use HasFactory;
 
-    protected $table = 'estados_soporte';
+    protected $table = 'estados_cobranza';
 
     protected $primaryKey = 'id';
     public $incrementing = false; // 'id' es CHAR(36)
@@ -19,7 +19,6 @@ class EstadoSoporte extends Model
         'id',
         'nombre',
         'descripcion',
-        'orden',
     ];
 
     public $timestamps = false; // Si la tabla no tiene campos 'created_at' y 'updated_at'

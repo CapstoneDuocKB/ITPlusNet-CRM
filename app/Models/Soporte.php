@@ -17,10 +17,10 @@ class Soporte extends Model
     protected $keyType = 'string'; // La clave primaria es un string
 
     protected $fillable = [
+        'id', // Añadido si deseas permitir la asignación masiva de 'id'
         'bodega_id',
         'sucursal_id',
-        'caja_id',
-        'caja_id',
+        'caja_id', // Eliminado el duplicado
         'celular',
         'descripcion',
         'dificultad_soporte_id',
@@ -29,6 +29,8 @@ class Soporte extends Model
         'horas_hombre',
         'solucion',
         'tipo_soporte_id',
+        'estado_cobranza_id',
+        'fecha_estimada_entrega',
         'uf',
         'urgente',
     ];
@@ -89,9 +91,19 @@ class Soporte extends Model
         return $this->belongsTo(TipoSoporte::class, 'tipo_soporte_id');
     }
 
+    public function estadoCobranza()
+    {
+        return $this->belongsTo(EstadoCobranza::class, 'estado_cobranza_id');
+    }
+
     // Relación uno a muchos con SoporteImagen (un soporte tiene muchas imágenes)
     public function imagenes()
     {
         return $this->hasMany(SoporteImagen::class, 'soporte_id');
+    }
+
+    public function conversation()
+    {
+        return $this->hasOne(Conversation::class, 'soporte_id');
     }
 }
