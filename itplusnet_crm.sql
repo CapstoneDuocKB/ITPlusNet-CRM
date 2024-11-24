@@ -21,7 +21,7 @@ CREATE TABLE estados_soporte (
 CREATE TABLE tipos_soporte (
   id CHAR(36) NOT NULL PRIMARY KEY,
   nombre  VARCHAR(255) NOT NULL,
-  descripcion VARCHAR(255) NOT NULL
+  descripcion VARCHAR(255)
 );
 
 CREATE TABLE regiones (

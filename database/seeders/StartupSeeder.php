@@ -5,7 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Usuario;
 use Spatie\Permission\Models\Role;
-use App\Models\EstadoSoporte; // Importar el modelo para estados de soporte
+use App\Models\EstadoSoporte;
+use App\Models\TipoSoporte;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -28,16 +29,16 @@ class StartupSeeder extends Seeder
 
         // 1. Administrador (Administrador)
         $admin = Usuario::firstOrCreate(
-            ['email' => 'ali.gonzalezqa@gmail.com'], // Asegúrate de que el email sea único
+            ['email' => 'ali.gonzalezqa@gmail.com'],
             [
                 'rut' => '21.012.942-1',
                 'name' => 'Alister Gonzalez',
-                'password' => Hash::make('Whyth$1005'), // Cambia la contraseña según sea necesario
+                'password' => Hash::make('Whyth$1005'),
                 'telefono' => '1234567890',
-                'direccion_id' => null, // Ajusta según tus necesidades
-                'empresa_id' => null, // Ajusta según tus necesidades
+                'direccion_id' => null,
+                'empresa_id' => null,
                 'activo' => true,
-                'id' => Str::uuid()->toString(), // Genera un UUID
+                'id' => Str::uuid()->toString(),
                 'sucursal_id' => 1,
                 'caja_id' => 12,
                 'bodega_id' => 1,
@@ -89,17 +90,32 @@ class StartupSeeder extends Seeder
             'PENDIENTE',
             'EN DESARROLLO',
             'CERRADO',
-            'POR COBRAR',
-            'COBRADO',
-            'GARANTIA'
         ];
 
         foreach ($estadosSoporte as $estado) {
             EstadoSoporte::firstOrCreate(
                 ['nombre' => $estado],
                 [
-                    'id' => Str::uuid()->toString(), // Genera un UUID
-                    'descripcion' => null // Dejar la descripción en NULL
+                    'id' => Str::uuid()->toString(),
+                    'descripcion' => null,
+                ]
+            );
+        }
+
+        // Crear tipos de soporte si no existen
+        $tiposSoporte = [
+            'DESARROLLO',
+            'INSTALACIÓN',
+            'SOPORTE',
+            'CAPACITACIÓN',
+        ];
+
+        foreach ($tiposSoporte as $tipo) {
+            TipoSoporte::firstOrCreate(
+                ['nombre' => $tipo],
+                [
+                    'id' => Str::uuid()->toString(),
+                    'descripcion' => null,
                 ]
             );
         }

@@ -188,6 +188,7 @@
         <div class="modal-dialog modal-dialog-centered modal-lg"><!-- Aumentamos el tamaño del modal -->
             <div class="modal-content">
                 <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="display: none;"></button>
                     <h5 class="modal-title" id="chatModalLabel">Chat con ITPlusBot</h5>
                 </div>
                 <div class="modal-body">
@@ -203,7 +204,8 @@
                                 <p class="mb-0">
                                     Hola, soy <strong>ITPlusBot</strong>, tu asistente virtual especializado en ayudarte a redactar tu problema de la forma más clara y concisa posible.
                                     Estoy aquí para entender y parafrasear tu situación, asegurándome de que el equipo técnico pueda brindarte la mejor asistencia posible.
-                                    Ten en cuenta que este chat será guardado para asegurar un mejor seguimiento de tu caso.
+                                
+                                    <em class="d-block"><strong>Ten en cuenta que este chat será guardado para asegurar un mejor seguimiento de tu caso.</strong></em>
                                 </p>
                             </div>
                         </div>
@@ -212,10 +214,35 @@
                     <div id="chat-messages" class="mb-4 text-gray-700">
                         <!-- Aquí se cargarán los mensajes del chat -->
                     </div>
-                    <div class="flex">
-                        <input type="text" id="chat-input" class="flex-grow border border-lime-300 focus:border-lime-500 focus:ring-lime-500 p-2 mr-2 rounded" placeholder="Escribe tu mensaje...">
-                        <button id="send-chat-btn" class="px-4 py-2 bg-lime-500 text-white rounded hover:bg-lime-600 focus:bg-lime-600 active:bg-lime-700">Enviar</button>
+                    <!-- Campo de entrada y botones de enviar y finalizar -->
+                    <div class="d-flex mt-3">
+                        <input type="text" id="chat-input" class="form-control me-2 border border-lime-300 focus:border-lime-500 focus:ring-lime-500 p-2 rounded" placeholder="Escribe tu mensaje...">
+                        <button id="send-chat-btn" type="button" class="btn btn-lime-500 text-white rounded hover:bg-lime-600 focus:bg-lime-600 active:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 transition ease-in-out duration-150 me-2">Enviar</button>
+                        <button id="end-chat-btn" type="button" class="btn btn-danger text-white rounded hover:bg-danger-600 focus:bg-danger-600 active:bg-danger-700 focus:outline-none focus:ring-2 focus:ring-danger-500 focus:ring-offset-2 transition ease-in-out duration-150" data-bs-toggle="tooltip" data-bs-placement="top" title="Finalizar Chat">
+                            <!-- Ícono de 'X' utilizando Bootstrap Icons -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                <path d="M2.146 2.146a.5.5 0 0 1 .708 0L8 7.293l5.146-5.147a.5.5 0 1 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854a.5.5 0 0 1 0-.708z"/>
+                            </svg>
+                        </button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación para Finalizar Chat -->
+    <div class="modal fade" id="confirmEndChatModal" tabindex="-1" aria-labelledby="confirmEndChatModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Finalizar Chat</h5>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas finalizar el chat? Esto cerrará el ticket y no podrás describir tu problema nuevamente.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" id="confirm-end-chat-btn" class="btn btn-danger">Finalizar</button>
                 </div>
             </div>
         </div>
