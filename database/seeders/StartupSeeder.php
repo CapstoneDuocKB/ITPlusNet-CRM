@@ -7,11 +7,7 @@ use App\Models\EstadoCobranza;
 use Illuminate\Database\Seeder;
 use App\Models\Usuario;
 use Spatie\Permission\Models\Role;
-<<<<<<< HEAD
-use App\Models\EstadoSoporte;
-=======
 use App\Models\EstadoSoporte; // Importar el modelo para estados de soporte
->>>>>>> 106190cc6ec881612204a9d7642608f14e30b472
 use App\Models\TipoSoporte;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -75,8 +71,8 @@ class StartupSeeder extends Seeder
         $cliente = Usuario::firstOrCreate(
             ['email' => 'cliente@itplusnet.com'],
             [
-                'rut' => '9.876.543-2',
-                'name' => 'Maria Lopez',
+                'rut' => '9.876.543-3',
+                'name' => 'QA',
                 'password' => Hash::make('password123'),
                 'telefono' => '1122334455',
                 'direccion_id' => null,
@@ -92,17 +88,10 @@ class StartupSeeder extends Seeder
 
         // Definir los estados de soporte con su orden correspondiente
         $estadosSoporte = [
-<<<<<<< HEAD
-            'ABIERTO',
-            'PENDIENTE',
-            'EN DESARROLLO',
-            'CERRADO',
-=======
             ['nombre' => 'Creado',       'orden' => 1],
             ['nombre' => 'Abierto',         'orden' => 2],
             ['nombre' => 'En Desarrollo',   'orden' => 3],
             ['nombre' => 'Cerrado',         'orden' => 4],
->>>>>>> 106190cc6ec881612204a9d7642608f14e30b472
         ];
 
         foreach ($estadosSoporte as $estado) {

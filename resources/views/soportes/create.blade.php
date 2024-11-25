@@ -205,14 +205,9 @@
                                 <p class="text-start mb-4">
                                     Hola, soy <strong>ITPlusBot</strong>, tu asistente virtual especializado en ayudarte a redactar tu problema de la forma más clara y concisa posible.
                                     Estoy aquí para entender y parafrasear tu situación, asegurándome de que el equipo técnico pueda brindarte la mejor asistencia posible.
-<<<<<<< HEAD
-                                
-                                    <em class="d-block"><strong>Ten en cuenta que este chat será guardado para asegurar un mejor seguimiento de tu caso.</strong></em>
-=======
                                 </p>
                                 <p class="blockquote-footer text-start">
                                     Ten en cuenta que este chat será guardado para asegurar un mejor seguimiento de tu caso.
->>>>>>> 106190cc6ec881612204a9d7642608f14e30b472
                                 </p>
                             </div>
                         </div>

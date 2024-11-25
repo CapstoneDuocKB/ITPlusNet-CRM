@@ -72,29 +72,6 @@
                     </div>
 
                     <!-- Sección 2: Datos del Soporte -->
-<<<<<<< HEAD
-                    <div class="bg-white p-4 rounded-lg shadow-md mb-6">
-                        <h3 class="font-semibold text-lg mb-4">Datos del Soporte</h3>
-                        <div class="flex flex-wrap -mx-4">
-                            <!-- Estado de Soporte -->
-                            <div class="w-full md:w-1/3 mb-6 px-4">
-                                <label for="estado_soporte_id" class="block text-gray-700 text-sm font-bold mb-2">Estado de Soporte</label>
-                                <select name="estado_soporte_id" id="estado_soporte_id" required class="block w-full bg-white border border-gray-300 rounded-md shadow-sm">
-                                    <option value="">Seleccione un estado</option>
-                                    @foreach($estados as $estado)
-                                        <option value="{{ $estado->id }}" {{ old('estado_soporte_id', $soporte->estado_soporte_id) == $estado->id ? 'selected' : '' }}>{{ $estado->nombre }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            
-                            <!-- Tipo de Soporte -->
-                            <div class="w-full md:w-1/3 mb-6 px-4">
-                                <label for="tipo_soporte_id" class="block text-gray-700 text-sm font-bold mb-2">Tipo de Soporte</label>
-                                <select name="tipo_soporte_id" id="tipo_soporte_id" required class="block w-full bg-white border border-gray-300 rounded-md shadow-sm">
-                                    <option value="">Seleccione un tipo</option>
-                                    @foreach($tipos as $tipo)
-                                        <option value="{{ $tipo->id }}" {{ old('tipo_soporte_id', $soporte->tipo_soporte_id) == $tipo->id ? 'selected' : '' }}>{{ $tipo->nombre }}</option>
-=======
                 <div class="bg-white p-6 rounded-lg shadow-md mb-6">
                     <h3 class="font-semibold text-lg mb-6 text-center">Datos del Soporte</h3>
                     <div class="flex flex-wrap justify-center -mx-4">
@@ -241,7 +218,6 @@
                                                 </div>
                                             </div>
                                         @endif
->>>>>>> 106190cc6ec881612204a9d7642608f14e30b472
                                     @endforeach
                                 </div>
 
