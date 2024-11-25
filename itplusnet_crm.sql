@@ -7,16 +7,22 @@ USE crm_itplusnet;
 CREATE TABLE dificultades_soporte (
   id CHAR(36) NOT NULL PRIMARY KEY,
   nombre varchar(20) NOT NULL,
-  descripcion varchar(255) NULL,
-  uf float NOT NULL
+  descripcion varchar(255),
+  uf float
 );
 
 CREATE TABLE estados_soporte (
   id CHAR(36) NOT NULL PRIMARY KEY,
   nombre VARCHAR(255) NOT NULL,
-  descripcion VARCHAR(255) 
+  descripcion VARCHAR(255),
+  orden INT NOT NULL
 );
 
+CREATE TABLE estados_cobranza (
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  nombre VARCHAR(255) NOT NULL,
+  descripcion VARCHAR(255) 
+);
 
 CREATE TABLE tipos_soporte (
   id CHAR(36) NOT NULL PRIMARY KEY,
@@ -139,18 +145,21 @@ CREATE TABLE soportes (
   urgente BOOLEAN NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  fecha_estimada_entrega DATE,
   bodega_id CHAR(36) NOT NULL,
   sucursal_id CHAR(36) NOT NULL,
   caja_id CHAR(36) NOT NULL,
   dificultad_soporte_id CHAR(36),
   estado_soporte_id CHAR(36) NOT NULL,
   tipo_soporte_id CHAR(36),
+  estado_cobranza_id CHAR(36),
   FOREIGN KEY (sucursal_id) REFERENCES sucursales(id),
   FOREIGN KEY (bodega_id) REFERENCES bodegas(id),
   FOREIGN KEY (caja_id) REFERENCES cajas(id),
   FOREIGN KEY (dificultad_soporte_id) REFERENCES dificultades_soporte(id),
   FOREIGN KEY (estado_soporte_id) REFERENCES estados_soporte(id),
-  FOREIGN KEY (tipo_soporte_id) REFERENCES tipos_soporte(id)
+  FOREIGN KEY (tipo_soporte_id) REFERENCES tipos_soporte(id),
+  FOREIGN KEY (estado_cobranza_id) REFERENCES estados_cobranza(id)
 );
 
 CREATE TABLE soporte_imagenes (
@@ -172,8 +181,9 @@ CREATE TABLE jerarquia_soportes (
 
 CREATE TABLE historiales_estado (
   id CHAR(36) NOT NULL PRIMARY KEY,
-  created_at TIMESTAMP NOT NULL,
-  comentario VARCHAR(255) NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  comentario VARCHAR(255),
   soporte_id CHAR(36) NOT NULL,
   estado_soporte_id CHAR(36) NOT NULL,
   usuario_id CHAR(36) NOT NULL,
@@ -190,4 +200,24 @@ CREATE TABLE notas (
   FOREIGN KEY(usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
   nota varchar(255) NOT NULL,
   fecha_de_creacion TIMESTAMP NOT NULL
+);
+
+-- Crear la tabla conversations
+CREATE TABLE conversations (
+    id CHAR(36) NOT NULL PRIMARY KEY,
+    soporte_id CHAR(36) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (soporte_id) REFERENCES soportes(id) ON DELETE CASCADE
+);
+
+-- Crear la tabla messages
+CREATE TABLE messages (
+    id CHAR(36) NOT NULL PRIMARY KEY,
+    conversation_id CHAR(36) NOT NULL,
+    role ENUM('user', 'assistant', 'system') NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (conversation_id) REFERENCES conversations(id) ON DELETE CASCADE
 );

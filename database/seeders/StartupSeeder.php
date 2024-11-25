@@ -2,10 +2,16 @@
 
 namespace Database\Seeders;
 
+use App\Models\DificultadSoporte;
+use App\Models\EstadoCobranza;
 use Illuminate\Database\Seeder;
 use App\Models\Usuario;
 use Spatie\Permission\Models\Role;
+<<<<<<< HEAD
 use App\Models\EstadoSoporte;
+=======
+use App\Models\EstadoSoporte; // Importar el modelo para estados de soporte
+>>>>>>> 106190cc6ec881612204a9d7642608f14e30b472
 use App\Models\TipoSoporte;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -84,17 +90,43 @@ class StartupSeeder extends Seeder
         );
         $cliente->assignRole('Cliente');
 
-        // Crear estados de soporte si no existen
+        // Definir los estados de soporte con su orden correspondiente
         $estadosSoporte = [
+<<<<<<< HEAD
             'ABIERTO',
             'PENDIENTE',
             'EN DESARROLLO',
             'CERRADO',
+=======
+            ['nombre' => 'Creado',       'orden' => 1],
+            ['nombre' => 'Abierto',         'orden' => 2],
+            ['nombre' => 'En Desarrollo',   'orden' => 3],
+            ['nombre' => 'Cerrado',         'orden' => 4],
+>>>>>>> 106190cc6ec881612204a9d7642608f14e30b472
         ];
 
         foreach ($estadosSoporte as $estado) {
             EstadoSoporte::firstOrCreate(
-                ['nombre' => $estado],
+                ['nombre' => $estado['nombre']],
+                [
+                    'id'          => Str::uuid()->toString(), // Genera un UUID
+                    'descripcion' => null,                    // Dejar la descripción en NULL
+                    'orden'       => $estado['orden'],        // Asigna el orden específico
+                ]
+            );
+        }
+        
+        // Crear estados de soporte si no existen
+        $tiposSoporte = [
+            'Desarrollo',
+            'Instalación',
+            'Soporte',
+            'Capacitación',
+        ];
+
+        foreach ($tiposSoporte as $tipoSoporte) {
+            TipoSoporte::firstOrCreate(
+                ['nombre' => $tipoSoporte],
                 [
                     'id' => Str::uuid()->toString(),
                     'descripcion' => null,
@@ -119,5 +151,40 @@ class StartupSeeder extends Seeder
                 ]
             );
         }
+
+        // Crear estados de soporte si no existen
+        $dificultadesSoporte = [
+            'Baja',
+            'Media',
+            'Alta',
+        ];
+
+        foreach ($dificultadesSoporte as $dificultadSoporte) {
+            DificultadSoporte::firstOrCreate(
+                ['nombre' => $dificultadSoporte],
+                [
+                    'id' => Str::uuid()->toString(), // Genera un UUID
+                    'descripcion' => null // Dejar la descripción en NULL
+                ]
+            );
+        }
+
+        // Crear estados de soporte si no existen
+        $estadosCobranza = [
+            'Cobrado',
+            'Pagado',
+            'Garantía',
+        ];
+
+        foreach ($estadosCobranza as $estadoCobranza) {
+            EstadoCobranza::firstOrCreate(
+                ['nombre' => $estadoCobranza],
+                [
+                    'id' => Str::uuid()->toString(), // Genera un UUID
+                    'descripcion' => null // Dejar la descripción en NULL
+                ]
+            );
+        }
+
     }
 }
