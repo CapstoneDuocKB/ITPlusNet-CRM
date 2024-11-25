@@ -25,7 +25,19 @@ class SoporteController
     // Mostrar la lista de soportes
     public function index()
     {
-        $soportes = Soporte::orderBy('created_at', 'desc')->paginate(10);
+        // Recuperar los soportes con la relación EstadoSoporte
+        $soportes = Soporte::with('estadoSoporte')
+            // Realizar un join con la tabla estado_soportes para ordenar por 'orden'
+            ->join('estado_soportes', 'soportes.estado_soporte_id', '=', 'estado_soportes.id')
+            // Ordenar primero por fecha de creación ascendente (más antiguo primero)
+            ->orderBy('soportes.created_at', 'asc')
+            // Luego ordenar por el campo 'orden' de estado_soportes ascendente (Pendiente primero)
+            ->orderBy('estado_soportes.orden', 'asc')
+            // Seleccionar solo los campos de soportes para evitar conflictos
+            ->select('soportes.*')
+            // Paginación de 10 elementos por página
+            ->paginate(10);
+            
         return view('soportes.index', compact('soportes'));
     }
 

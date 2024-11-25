@@ -2,9 +2,10 @@
      :class="open ? 'w-44' : 'w-16'">
     <!-- Parte superior para el ícono (logo) -->
     <div class="flex items-center justify-center bg-white text-black h-16">
-        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        {{-- <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M13 5v6a1 1 0 001 1h3m-8 8h8a1 1 0 001-1v-7m-5 1a1 1 0 011-1m-4 4h8"></path>
-        </svg>
+        </svg> --}}
+        <img src="{{ asset('img/itplusnet.png') }}" alt="ITPlusNet Logo" class="imgae-fluid p-2 ml-4">
     </div>
 
     <!-- Enlaces de navegación -->
