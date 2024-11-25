@@ -19,6 +19,7 @@ class EstadoSoporte extends Model
         'id',
         'nombre',
         'descripcion',
+        'orden',
     ];
 
     public $timestamps = false; // Si la tabla no tiene campos 'created_at' y 'updated_at'

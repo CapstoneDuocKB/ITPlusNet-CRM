@@ -65,7 +65,7 @@ class EstadosSoporteController extends Controller
         $estado_soporte->descripcion = $request->descripcion;
         $estado_soporte->save();
 
-        return redirect()->route('estados_soporte.index')->with('success', 'Estado de soporte actualizado exitosamente.');
+        return redirect()->route('estados_soporte.index')->with('success', 'El Estado de Soporte se ha actualizado exitosamente.');
     }
 
     // Eliminar un estado de soporte de la base de datos
@@ -74,6 +74,6 @@ class EstadosSoporteController extends Controller
         $estado_soporte = EstadoSoporte::findOrFail($id);
         $estado_soporte->delete();
 
-        return redirect()->route('estados_soporte.index')->with('success', 'Estado de soporte eliminado exitosamente.');
+        return redirect()->route('estados_soporte.index')->with('success', 'El Estado de Soporte se ha eliminado exitosamente.');
     }
 }
