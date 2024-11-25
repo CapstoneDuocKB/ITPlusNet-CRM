@@ -106,7 +106,7 @@ class ChatGPTController extends Controller
                     'Content-Type'  => 'application/json',
                 ],
                 'json' => [
-                    'model' => 'gpt-4o', // Cambia a 'gpt-4' según el acceso
+                    'model' => 'gpt-4o', // Cambia a 'gpt-4o' según el acceso
                     'messages' => $messages,
                     'max_tokens' => 1536,
                     'temperature' => 0.15,

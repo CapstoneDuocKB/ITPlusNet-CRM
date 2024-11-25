@@ -88,7 +88,7 @@ class StartupSeeder extends Seeder
 
         // Definir los estados de soporte con su orden correspondiente
         $estadosSoporte = [
-            ['nombre' => 'Pendiente',       'orden' => 1],
+            ['nombre' => 'Creado',       'orden' => 1],
             ['nombre' => 'Abierto',         'orden' => 2],
             ['nombre' => 'En Desarrollo',   'orden' => 3],
             ['nombre' => 'Cerrado',         'orden' => 4],

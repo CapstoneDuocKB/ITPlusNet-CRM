@@ -65,7 +65,7 @@ class TiposSoporteController extends Controller
         $tipo_soporte->descripcion = $request->descripcion;
         $tipo_soporte->save();
 
-        return redirect()->route('tipos_soporte.index')->with('success', 'Tipo de soporte actualizado exitosamente.');
+        return redirect()->route('tipos_soporte.index')->with('success', 'El Tipo de Soporte se ha actualizado conexitosamente.');
     }
 
     // Eliminar un tipo de soporte de la base de datos
@@ -74,6 +74,6 @@ class TiposSoporteController extends Controller
         $tipo_soporte = TipoSoporte::findOrFail($id);
         $tipo_soporte->delete();
 
-        return redirect()->route('tipos_soporte.index')->with('success', 'Tipo de soporte eliminado exitosamente.');
+        return redirect()->route('tipos_soporte.index')->with('success', 'El Tipo de Soporte se ha eliminado exitosamente.');
     }
 }

@@ -28,16 +28,16 @@ class SoporteController
         // Recuperar los soportes con la relación EstadoSoporte
         $soportes = Soporte::with('estadoSoporte')
             // Realizar un join con la tabla estado_soportes para ordenar por 'orden'
-            ->join('estado_soportes', 'soportes.estado_soporte_id', '=', 'estado_soportes.id')
-            // Ordenar primero por fecha de creación ascendente (más antiguo primero)
+            ->join('estados_soporte', 'soportes.estado_soporte_id', '=', 'estados_soporte.id')
+            // Ordenar primero por el campo 'orden' de estado_soportes ascendente (Pendiente primero)
+            ->orderBy('estados_soporte.orden', 'asc')
+            // Luegp ordenar por fecha de creación ascendente (más antiguo primero)
             ->orderBy('soportes.created_at', 'asc')
-            // Luego ordenar por el campo 'orden' de estado_soportes ascendente (Pendiente primero)
-            ->orderBy('estado_soportes.orden', 'asc')
             // Seleccionar solo los campos de soportes para evitar conflictos
             ->select('soportes.*')
             // Paginación de 10 elementos por página
             ->paginate(10);
-            
+
         return view('soportes.index', compact('soportes'));
     }
 
@@ -89,7 +89,7 @@ class SoporteController
             // Crear el soporte
             $soporte = new Soporte();
             $soporte->id = Str::uuid()->toString();
-            $soporte->estado_soporte_id = EstadoSoporte::where('nombre', 'PENDIENTE')->first()->id;
+            $soporte->estado_soporte_id = EstadoSoporte::where('orden', 1)->first()->id;
             $soporte->descripcion = $request->input('descripcion');
             $soporte->celular = $request->input('celular');
             $soporte->email = $request->input('email');
@@ -155,7 +155,7 @@ class SoporteController
         $messages = Message::where('conversation_id', $conversation->id)->orderBy('created_at')->get();
         
         $historialEstados = HistorialEstado::where('soporte_id', $soporte->id)->get();
-        $estadoPendiente = EstadoSoporte::where('nombre', 'PENDIENTE')->first();
+        $estadoPendiente = EstadoSoporte::where('orden', 1)->first();
 
         if($historialEstados->count() < 2){
             //insertar historial estado con el usuario logeado estado_soporte_id ABIERTO y actualizar el estado_id del soporte a ABIERTO tambien
@@ -188,42 +188,74 @@ class SoporteController
         $validatedData = $request->validate([
             'horas_hombre' => 'nullable|numeric',
             'uf' => 'nullable|numeric',
-            'fecha_estimada_entrega' => 'required|nullable|date',
+            'fecha_estimada_entrega' => 'required|date',
             'descripcion' => 'nullable|string|max:4000',
             'solucion' => 'nullable|string|max:4000',
             'celular' => 'nullable|string|max:12',
             'email' => 'nullable|email|max:45',
             'urgente' => 'sometimes|boolean',
-            'bodega_id' => 'required|exists:bodegas,id',
-            'caja_id' => 'required|exists:cajas,id',
             'dificultad_soporte_id' => 'required|exists:dificultades_soporte,id',
             'estado_soporte_id' => 'required|exists:estados_soporte,id',
             'tipo_soporte_id' => 'required|exists:tipos_soporte,id',
         ]);
 
         $soporte = Soporte::findOrFail($id);
+
+        // Obtener el estado anterior
+        $estadoAnterior = $soporte->estado_soporte_id;
+
         $soporte->fill($validatedData);
         $soporte->urgente = $request->has('urgente');
-
-        //insertar historial estado con el usuario logeado estado_soporte_id ABIERTO y actualizar el estado_id del soporte a ABIERTO tambien
-        $estadoAbierto = EstadoSoporte::where('nombre', 'En Desarrollo')->first();
-
-        // Actualizar estado soporte
-        $soporte->estado_soporte_id = $estadoAbierto->id;
         $soporte->save();
 
-        // Crear nuevo registro del estado historico del soporte
+        // Verificar si el nuevo estado es "Cerrado"
+        $estadoCerrado = EstadoSoporte::where('nombre', 'Cerrado')->first();
+
+        if ($validatedData['estado_soporte_id'] == $estadoCerrado->id) {
+            // Obtener todos los estados ordenados por 'orden'
+            $estadosOrdenados = EstadoSoporte::orderBy('orden')->get();
+
+            // Encontrar el orden del estado anterior
+            $ordenAnterior = $estadosOrdenados->where('id', $estadoAnterior)->first()->orden ?? 0;
+
+            // Encontrar el orden del estado actual (Cerrado)
+            $ordenCerrado = $estadoCerrado->orden;
+
+            // Obtener los estados intermedios que se han saltado
+            $estadosIntermedios = $estadosOrdenados->whereBetween('orden', [$ordenAnterior + 1, $ordenCerrado - 1]);
+
+            // Obtener los estados que ya están en el historial para evitar duplicados
+            $historialEstados = HistorialEstado::where('soporte_id', $soporte->id)->get()->toArray();
+
+            // Filtrar los estados intermedios que aún no están en el historial
+            $estadosParaRegistrar = $estadosIntermedios->filter(function ($estado) use ($historialEstados) {
+                return !in_array($estado->id, $historialEstados);
+            });
+
+            dump($estadosParaRegistrar);
+            // Registrar los estados intermedios en el historial en orden
+            foreach ($estadosParaRegistrar as $estado) {
+                HistorialEstado::create([
+                    'id' => Str::uuid()->toString(),
+                    'soporte_id' => $soporte->id,
+                    'estado_soporte_id' => $estado->id,
+                    'usuario_id' => Auth::id(),
+                ]);
+            }
+        }
+
+        // Registrar el estado actual en el historial
         HistorialEstado::create([
             'id' => Str::uuid()->toString(),
             'soporte_id' => $soporte->id,
-            'estado_soporte_id' => $estadoAbierto->id,
+            'estado_soporte_id' => $soporte->estado_soporte_id,
             'usuario_id' => Auth::id(),
         ]);
 
 
         $soporte->save();
 
-        return redirect()->route('soportes.index')->with('success', 'Soporte actualizado exitosamente.');
+        return redirect()->route('soportes.index')->with('success', 'El Soporte se ha actualizado conexitosamente.');
     }
 
     // Eliminar un soporte de la base de datos
@@ -232,7 +264,7 @@ class SoporteController
         $soporte = Soporte::findOrFail($id);
         $soporte->delete();
 
-        return redirect()->route('soportes.index')->with('success', 'Soporte eliminado exitosamente.');
+        return redirect()->route('soportes.index')->with('success', 'El Soporte se ha eliminado exitosamente.');
     }
 
     public function upload(Request $request)

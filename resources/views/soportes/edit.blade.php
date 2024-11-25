@@ -242,8 +242,7 @@
                             id="horas_hombre" 
                             name="horas_hombre" 
                             value="{{ old('horas_hombre', $soporte->horas_hombre) }}" 
-                            class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm"
-                        >
+                            class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm"/>
                     </div>
 
                     <!-- UF -->
@@ -256,8 +255,7 @@
                             id="uf" 
                             name="uf" 
                             value="{{ old('uf', $soporte->uf) }}" 
-                            class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm"
-                        >
+                            class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm"/>
                     </div>
 
                     <!-- Estados de Cobranza -->
@@ -436,11 +434,11 @@
                                 <div class="timeline-content">
                                     <h5>{{ $estadoSoporte->nombre }}</h5>
                                     @if($isAchieved && $historial)
-                                        <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($historial->created_at)->format('d-m-Y H:i:s') }}</p>
-                                        @if($historial->comentario)
-                                            <p><strong>Comentario:</strong> {{ $historial->comentario }}</p>
-                                        @endif
-                                        <p><strong>Usuario:</strong> {{ $historial->usuario->name ?? 'Desconocido' }}</p>
+                                    @if($historial->comentario)
+                                        <p><strong>Comentario:</strong> {{ $historial->comentario }}</p>
+                                    @endif
+                                    <p><strong>Por:</strong> {{ $historial->usuario->name ?? 'Desconocido' }}</p>
+                                    <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($historial->created_at)->format('d-m-Y H:i:s') }}</p>
                                     @else
                                         <p class="text-muted">Aún no alcanzado</p>
                                     @endif
@@ -468,13 +466,13 @@
 
                 <!-- Fecha estimada de entrega -->
                 <div class="w-full md:w-1/2 mb-6 px-4">
-                    <label for="fecha_estimada" class="block text-gray-700 text-sm font-bold mb-2 text-center">Fecha Estimada de Entrega</label>
+                    <label for="fecha_estimada_entrega" class="block text-gray-700 text-sm font-bold mb-2 text-center">Fecha Estimada de Entrega</label>
                     <input 
                         type="date" 
                         required 
                         step="0.01" 
-                        id="fecha_estimada" 
-                        name="fecha_estimada" 
+                        id="fecha_estimada_entrega" 
+                        name="fecha_estimada_entrega" 
                         value="{{ old('fecha_estimada_entrega', $soporte->fecha_estimada_entrega) }}" 
                         class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm"
                     >
