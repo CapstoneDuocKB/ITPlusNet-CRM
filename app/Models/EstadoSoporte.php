@@ -20,6 +20,7 @@ class EstadoSoporte extends Model
         'nombre',
         'descripcion',
         'orden',
+        'isTerminal',
     ];
 
     public $timestamps = false; // Si la tabla no tiene campos 'created_at' y 'updated_at'

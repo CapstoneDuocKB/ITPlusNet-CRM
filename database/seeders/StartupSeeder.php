@@ -88,10 +88,10 @@ class StartupSeeder extends Seeder
 
         // Definir los estados de soporte con su orden correspondiente
         $estadosSoporte = [
-            ['nombre' => 'Creado',       'orden' => 1],
-            ['nombre' => 'Abierto',         'orden' => 2],
-            ['nombre' => 'En Desarrollo',   'orden' => 3],
-            ['nombre' => 'Cerrado',         'orden' => 4],
+            ['nombre' => 'Pendiente',       'orden' => 1, 'isTerminal' => 0],
+            ['nombre' => 'Abierto',         'orden' => 2, 'isTerminal' => 0],
+            ['nombre' => 'En Desarrollo',   'orden' => 3, 'isTerminal' => 0],
+            ['nombre' => 'Cerrado',         'orden' => 4, 'isTerminal' => 1],
         ];
 
         foreach ($estadosSoporte as $estado) {
@@ -101,6 +101,7 @@ class StartupSeeder extends Seeder
                     'id'          => Str::uuid()->toString(), // Genera un UUID
                     'descripcion' => null,                    // Dejar la descripción en NULL
                     'orden'       => $estado['orden'],        // Asigna el orden específico
+                    'isTerminal'       => $estado['isTerminal'],        // Asigna el orden específico
                 ]
             );
         }
