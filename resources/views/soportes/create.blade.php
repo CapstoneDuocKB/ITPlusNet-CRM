@@ -216,7 +216,6 @@
                     <div id="chat-messages" class="mb-4 text-gray-700">
                         <!-- Aquí se cargarán los mensajes del chat -->
                     </div>
-<<<<<<< Updated upstream
                     <!-- Campo de entrada y botones de enviar y finalizar -->
                     <div class="d-flex mt-3">
                         <input type="text" id="chat-input" class="form-control me-2 border border-lime-300 focus:border-lime-500 focus:ring-lime-500 p-2 rounded" placeholder="Escribe tu mensaje...">
@@ -226,14 +225,6 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                                 <path d="M2.146 2.146a.5.5 0 0 1 .708 0L8 7.293l5.146-5.147a.5.5 0 1 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854a.5.5 0 0 1 0-.708z"/>
                             </svg>
-=======
-                    <div class="flex">
-                        <input type="text" id="chat-input" class="flex-grow border border-lime-300 focus:border-lime-500 focus:ring-lime-500 p-2 mr-2 rounded" placeholder="Escribe tu mensaje...">
-                        <button id="send-chat-btn" class="px-4 py-2 bg-lime-500 text-white rounded hover:bg-lime-600 focus:bg-lime-600 active:bg-lime-700">Enviar</button>
-                        <!-- Botón "Finalizar Chat" -->
-                        <button id="close-chat-btn" class="ml-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 focus:bg-red-600 active:bg-red-700" title="Finalizar Chat">
-                            &times;
->>>>>>> Stashed changes
                         </button>
                     </div>
                 </div>
