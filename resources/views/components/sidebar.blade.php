@@ -21,7 +21,7 @@
                   x-cloak>Dashboard</span>
         </a>
 
-        <a href="{{ route('dashboard') }}" 
+        {{-- <a href="{{ route('dashboard') }}" 
            class="flex items-center w-full px-4 py-3 rounded-md hover:bg-gray-100
                   {{ request()->routeIs('usuarios.index') ? 'bg-gray-200 text-black font-bold' : '' }}">
             <svg class="w-6 h-6 flex-shrink-0 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -30,11 +30,11 @@
             <span class="ml-4 overflow-hidden whitespace-nowrap transition-opacity duration-300"
                   :class="open ? 'opacity-100' : 'opacity-0'"
                   x-cloak>Usuarios</span>
-        </a>
+        </a> --}}
 
         <a href="{{ route('soportes.index') }}" 
            class="flex items-center w-full px-4 py-3 rounded-md hover:bg-gray-100
-                  {{ request()->routeIs('profile.show') ? 'bg-gray-200 text-black font-bold' : '' }}">
+                  {{ request()->routeIs('soportes.index') ? 'bg-gray-200 text-black font-bold' : '' }}">
             <svg class="w-6 h-6 flex-shrink-0 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12v8m0 0h3m-3 0H9m3 0V4m-7 7h14"></path>
             </svg>
