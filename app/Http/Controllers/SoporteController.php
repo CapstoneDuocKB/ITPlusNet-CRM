@@ -133,12 +133,39 @@ class SoporteController
     }
     
 
-    // Mostrar detalles de un soporte específico
-    public function show($id)
-    {
-        $soporte = Soporte::findOrFail($id);
-        return view('soportes.show', compact('soporte'));
-    }
+// Mostrar detalles de un soporte específico con línea de tiempo
+public function show($id)
+{
+    $soporte = Soporte::findOrFail($id);
+
+    // Obtener historial de estados
+    $historialEstados = HistorialEstado::where('soporte_id', $soporte->id)->get();
+
+    // Obtener todos los estados de soporte ordenados
+    $estadosSoporte = EstadoSoporte::orderBy('orden')->get();
+
+    // Obtener el estado pendiente (asumiendo que 'orden' 1 es pendiente)
+    $estadoPendiente = EstadoSoporte::where('orden', 1)->first();
+
+    // Obtener el usuario que creó el soporte
+    $id_creador_soporte = HistorialEstado::where('soporte_id', $soporte->id)
+        ->where('estado_soporte_id', $estadoPendiente->id)
+        ->first()->usuario_id ?? null;
+    $creador_soporte = Usuario::find($id_creador_soporte);
+
+    // Obtener el estado actual
+    $estadoActual = EstadoSoporte::find($soporte->estado_soporte_id);
+    $isClosed = $estadoActual->isTerminal;
+
+    return view('soportes.show', compact(
+        'soporte',
+        'historialEstados',
+        'estadosSoporte',
+        'creador_soporte',
+        'isClosed'
+    ));
+}
+
 
     // Mostrar el formulario para editar un soporte existente
     public function edit($id)
