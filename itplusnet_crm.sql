@@ -15,7 +15,8 @@ CREATE TABLE estados_soporte (
   id CHAR(36) NOT NULL PRIMARY KEY,
   nombre VARCHAR(255) NOT NULL,
   descripcion VARCHAR(255),
-  orden INT NOT NULL
+  orden INT NOT NULL,
+  isTerminal BOOLEAN NOT NULL
 );
 
 CREATE TABLE estados_cobranza (

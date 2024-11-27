@@ -1,10 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Atender Soporte') }}
+            {{ __('Atender Soporte' ) }}
         </h2>
     </x-slot>
-
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <!-- Contenido principal -->
@@ -18,6 +17,13 @@
                         </ul>
                     </div>
                 @endif
+
+                @if(session('success'))
+                    <div class="mb-4 p-4 bg-green-100 text-green-700 rounded">
+                        {{ session('success') }}
+                    </div>
+                @endif
+
                 <form method="POST" action="{{ route('soportes.update', $soporte->id) }}">
                     @csrf
                     @method('PUT')
@@ -89,7 +95,7 @@
                         <!-- Tipo de Soporte -->
                         <div class="w-full md:w-1/2 mb-6 px-4">
                             <label for="tipo_soporte_id" class="block text-gray-700 text-sm font-bold mb-2 text-center">Tipo de Soporte</label>
-                            <select name="tipo_soporte_id" id="tipo_soporte_id" required class="block w-full bg-white border border-gray-300 rounded-md shadow-sm text-center">
+                            <select name="tipo_soporte_id" id="tipo_soporte_id" required class="block w-full bg-white border border-gray-300 rounded-md shadow-sm text-center" {{ $isClosed ? 'disabled readonly' : '' }}>
                                 <option value="">Seleccionar tipo del soporte</option>
                                 @foreach($tipos as $tipo)
                                     <option value="{{ $tipo->id }}" {{ old('tipo_soporte_id', $soporte->tipo_soporte_id) == $tipo->id ? 'selected' : '' }}>{{ $tipo->nombre }}</option>
@@ -100,7 +106,7 @@
                         <!-- Dificultad de Soporte -->
                         <div class="w-full md:w-1/2 mb-6 px-4">
                             <label for="dificultad_soporte_id" class="block text-gray-700 text-sm font-bold mb-2 text-center">Dificultad de Soporte</label>
-                            <select name="dificultad_soporte_id" id="dificultad_soporte_id" required class="block w-full bg-white border border-gray-300 rounded-md shadow-sm text-center">
+                            <select name="dificultad_soporte_id" id="dificultad_soporte_id" required class="block w-full bg-white border border-gray-300 rounded-md shadow-sm text-center" {{ $isClosed ? 'disabled readonly' : '' }}>
                                 <option value="">Seleccionar dificultad del soporte</option>
                                 @foreach($dificultades as $dificultad)
                                     <option value="{{ $dificultad->id }}" {{ old('dificultad_soporte_id', $soporte->dificultad_soporte_id) == $dificultad->id ? 'selected' : '' }}>{{ $dificultad->nombre }}</option>
@@ -118,8 +124,9 @@
                           name="descripcion" 
                           rows="4" 
                           maxlength="4000" 
-                          class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm" 
                           disabled
+                          readonly
+                          class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm" 
                         >{{ old('descripcion', $soporte->descripcion) }}</textarea>
                       </div>
 
@@ -269,7 +276,9 @@
                             id="horas_hombre" 
                             name="horas_hombre" 
                             value="{{ old('horas_hombre', $soporte->horas_hombre) }}" 
-                            class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm"/>
+                            class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm"
+                            {{ $isClosed ? 'disabled readonly' : '' }}
+                        />
                     </div>
 
                     <!-- UF -->
@@ -282,14 +291,16 @@
                             id="uf" 
                             name="uf" 
                             value="{{ old('uf', $soporte->uf) }}" 
-                            class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm"/>
+                            class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm"
+                            {{ $isClosed ? 'disabled readonly' : '' }}
+                        />
                     </div>
 
                     <!-- Estados de Cobranza -->
                     <div class="w-full md:w-1/3 mb-6 px-4">
                         <label for="estado_cobranza_id" class="block text-gray-700 text-sm font-bold mb-2 text-center">Estado de Cobranza</label>
-                        <select name="estado_cobranza_id" id="estado_cobranza_id" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm text-center">
-                            <option value="">Seleccionar tipo del soporte</option>
+                        <select name="estado_cobranza_id" id="estado_cobranza_id" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm text-center" {{ $isClosed ? 'disabled readonly' : '' }}>
+                            <option value="">Seleccionar estado de cobranza</option>
                             @foreach($estadosCobranza as $estadoCobranza)
                                 <option value="{{ $estadoCobranza->id }}" {{ old('estado_cobranza_id', $soporte->estado_cobranza_id) == $estadoCobranza->id ? 'selected' : '' }}>{{ $estadoCobranza->nombre }}</option>
                             @endforeach
@@ -443,7 +454,21 @@
             </style>
 
             <div class="wrapper container-fluid">
-            <!-- Otros contenidos de la vista edit -->
+
+                <!-- Fecha estimada de entrega -->
+                <div class="w-full md:w-1/1 mb-6 px-4">
+                    <label for="fecha_estimada_entrega" class="block text-gray-700 text-sm font-bold mb-2 text-center">Fecha Estimada de Entrega</label>
+                    <input 
+                        type="date" 
+                        required 
+                        step="0.01" 
+                        id="fecha_estimada_entrega" 
+                        name="fecha_estimada_entrega" 
+                        value="{{ old('fecha_estimada_entrega', $soporte->fecha_estimada_entrega) }}" 
+                        class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm"
+                        {{ $isClosed ? 'disabled readonly' : '' }}
+                    >
+                </div>
 
             <!-- Línea Temporal -->
                 <div class="mt-2">
@@ -458,18 +483,18 @@
                             @endphp
                             <li class="timeline-item">
                                 <div class="timeline-point {{ $isAchieved ? 'green' : 'gray' }}"></div>
-                                <div class="timeline-content">
-                                    <h5>{{ $estadoSoporte->nombre }}</h5>
-                                    @if($isAchieved && $historial)
-                                    @if($historial->comentario)
-                                        <p><strong>Comentario:</strong> {{ $historial->comentario }}</p>
-                                    @endif
-                                    <p><strong>Por:</strong> {{ $historial->usuario->name ?? 'Desconocido' }}</p>
-                                    <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($historial->created_at)->format('d-m-Y H:i:s') }}</p>
-                                    @else
-                                        <p class="text-muted">Aún no alcanzado</p>
-                                    @endif
-                                </div>
+                                    <div class="timeline-content">
+                                        <h5>{{ $estadoSoporte->nombre }}</h5>
+                                        @if($isAchieved && $historial)
+                                        <p><strong>Por:</strong> {{ $historial->usuario->name ?? 'Desconocido' }}</p>
+                                        <p><strong>Fecha:</strong> {{ \Carbon\Carbon::parse($historial->created_at)->format('d-m-Y H:i:s') }}</p>
+                                        @if($historial->comentario)
+                                            <p><strong>Comentario:</strong> {{ $historial->comentario }}</p>
+                                        @endif
+                                        @else
+                                            <p class="text-muted">Aún no alcanzado</p>
+                                        @endif
+                                    </div>
                             </li>
                         @endforeach
                     </ul>
@@ -477,33 +502,37 @@
             </div>
 
             <div class="flex flex-wrap justify-center -mx-4">
+                
+
                 <!-- Estado del Soporte -->
                 <div class="w-full md:w-1/2 mb-2 px-4">
                     <label for="estado_soporte_id" class="block text-gray-700 text-sm font-bold mb-2 text-center">Estado del Soporte</label>
-                    <select name="estado_soporte_id" id="estado_soporte_id" required class="block w-full bg-white border border-gray-300 rounded-md shadow-sm text-center">
-                        @foreach($estadoSoporteSelect as $estadoSoporte)
-                            @if($estadoSoporte->nombre == 'Abierto')
-                                <option value="{{ $estadoSoporte->id }}" {{ old('estado_soporte_id', $soporte->estado_soporte_id) == $estadoSoporte->id ? 'selected disabled' : '' }}>{{ $estadoSoporte->nombre }}</option>
-                            @else
-                                <option value="{{ $estadoSoporte->id }}" {{ old('estado_soporte_id', $soporte->estado_soporte_id) == $estadoSoporte->id ? 'selected' : '' }}>{{ $estadoSoporte->nombre }}</option>
-                            @endif
+                    <select name="estado_soporte_id" id="estado_soporte_id" required class="block w-full bg-white border border-gray-300 rounded-md shadow-sm text-center" {{ $isClosed ? 'disabled readonly' : '' }}>
+                        @foreach($estadosSoporte as $estadoSoporte)
+                            <option value="{{ $estadoSoporte->id }}"
+                                {{ old('estado_soporte_id', $soporte->estado_soporte_id) == $estadoSoporte->id ? 'selected' : '' }}
+                                @if($estadoSoporte->orden <= $currentOrden && !$isClosed) disabled @endif
+                            >
+                                {{ $estadoSoporte->nombre }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
 
-                <!-- Fecha estimada de entrega -->
-                <div class="w-full md:w-1/2 mb-6 px-4">
-                    <label for="fecha_estimada_entrega" class="block text-gray-700 text-sm font-bold mb-2 text-center">Fecha Estimada de Entrega</label>
-                    <input 
-                        type="date" 
-                        required 
-                        step="0.01" 
-                        id="fecha_estimada_entrega" 
-                        name="fecha_estimada_entrega" 
-                        value="{{ old('fecha_estimada_entrega', $soporte->fecha_estimada_entrega) }}" 
-                        class="block mx-auto text-center w-full bg-white border border-gray-300 rounded-md shadow-sm"
-                    >
+                <!-- Comentario -->
+                <div class="w-full md:w-1/2 mb-2 px-4">
+                    <label for="comentario" class="block text-gray-700 text-sm font-bold mb-2 text-center">Comentario</label>
+                    <textarea 
+                        id="comentario" 
+                        name="comentario" 
+                        rows="4" 
+                        maxlength="4000" 
+                        class="block w-full bg-white border border-gray-300 rounded-md shadow-sm text-center"
+                        {{ $isClosed ? 'disabled readonly' : '' }}
+                    >{{ $isClosed ? $historial->comentario : '' }}
+                    </textarea>
                 </div>
+
 
             </div>
 
@@ -511,7 +540,15 @@
             <div class="bg-white p-4 rounded-lg shadow-md mb-6">
                 <div class="mb-4">
                     <label for="solucion" class="block text-gray-700 text-sm font-bold mb-2 text-center">Solución</label>
-                    <textarea id="solucion" required name="solucion" rows="4" maxlength="4000" class="block w-full bg-white border border-gray-300 rounded-md shadow-sm">{{ old('solucion', $soporte->solucion) }}</textarea>
+                    <textarea 
+                        id="solucion" 
+                        required 
+                        name="solucion" 
+                        rows="4" 
+                        maxlength="4000" 
+                        class="block w-full bg-white border border-gray-300 rounded-md shadow-sm"
+                        {{ $isClosed ? 'disabled readonly' : '' }}
+                    >{{ old('solucion', $soporte->solucion) }}</textarea>
                 </div>
             </div>
 
@@ -520,12 +557,22 @@
                 <a href="{{ route('soportes.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">
                     Atrás
                 </a>
-                <x-button id="crear-soporte-btn" class="mb-4">
-                    {{ __('Actualizar Soporte') }}
-                </x-button>
+                @if(!$isClosed)
+                    <x-button id="crear-soporte-btn" class="mb-4">
+                        {{ __('Actualizar Soporte') }}
+                    </x-button>
+                @else
+                    <x-button id="crear-soporte-btn" class="mb-4" disabled>
+                        {{ __('Actualizar Soporte') }}
+                    </x-button>
+                @endif
             </div>
+            @if($isClosed)
+                <div class="mt-4 p-4 bg-gray-100 text-dark-700 rounded text-center">
+                    Este soporte está cerrado. No es posible hacer cambios.
+                </div>
+            @endif
             </form>
         </div>
-    </div>
     </div>
 </x-app-layout>

@@ -148,7 +148,12 @@ class SoporteController
         $cajas = Caja::all();
         $dificultades = DificultadSoporte::all();
         $estadosSoporte = EstadoSoporte::orderBy('orden')->get();
-        $estadoSoporteSelect = EstadoSoporte::where('nombre','Cerrado')->orWhere('nombre','En Desarrollo')->orWhere('nombre','Abierto')->orderBy('nombre')->get();
+        
+        // Filtrar los estados específicos y ordenarlos por 'orden' en lugar de 'nombre'
+        $estadoSoporteSelect = EstadoSoporte::whereIn('nombre', ['Cerrado', 'En Desarrollo', 'Abierto'])
+            ->orderBy('orden')
+            ->get();
+        
         $tipos = TipoSoporte::all();
         $estadosCobranza = EstadoCobranza::all();
         $conversation = Conversation::where('soporte_id', $soporte->id)->first();
@@ -156,16 +161,16 @@ class SoporteController
         
         $historialEstados = HistorialEstado::where('soporte_id', $soporte->id)->get();
         $estadoPendiente = EstadoSoporte::where('orden', 1)->first();
-
-        if($historialEstados->count() < 2){
-            //insertar historial estado con el usuario logeado estado_soporte_id ABIERTO y actualizar el estado_id del soporte a ABIERTO tambien
+    
+        if ($historialEstados->count() < 2) {
+            // Insertar historial estado con el usuario logeado estado_soporte_id ABIERTO y actualizar el estado_id del soporte a ABIERTO también
             $estadoAbierto = EstadoSoporte::where('nombre', 'ABIERTO')->first();
-
+    
             // Actualizar estado soporte
             $soporte->estado_soporte_id = $estadoAbierto->id;
             $soporte->save();
-
-            // Crear nuevo registro del estado historico del soporte
+    
+            // Crear nuevo registro del estado histórico del soporte
             HistorialEstado::create([
                 'id' => Str::uuid()->toString(),
                 'soporte_id' => $soporte->id,
@@ -173,31 +178,67 @@ class SoporteController
                 'usuario_id' => Auth::id(),
             ]);
         }
-
+    
         $historialEstados = HistorialEstado::where('soporte_id', $soporte->id)->get();
-
-        $id_creador_soporte = HistorialEstado::where('soporte_id', $soporte->id)->where('estado_soporte_id', $estadoPendiente->id)->first()->usuario_id;
+    
+        $id_creador_soporte = HistorialEstado::where('soporte_id', $soporte->id)
+            ->where('estado_soporte_id', $estadoPendiente->id)
+            ->first()->usuario_id;
         $creador_soporte = Usuario::find($id_creador_soporte);
+    
+        // Obtener el orden del estado actual
+        $estadoActual = EstadoSoporte::find($soporte->estado_soporte_id);
+        $currentOrden = $estadoActual->orden;
+    
+        // Verificar si el estado actual es 'Cerrado'
+        $isClosed = $estadoActual->isTerminal;
 
-        return view('soportes.edit', compact('soporte', 'bodegas', 'cajas', 'dificultades', 'estadosSoporte', 'estadosCobranza', 'tipos', 'messages', 'creador_soporte', 'historialEstados', 'estadoSoporteSelect'));
+        return view('soportes.edit', compact(
+            'soporte',
+            'bodegas',
+            'cajas',
+            'dificultades',
+            'estadosSoporte',
+            'estadosCobranza',
+            'tipos',
+            'messages',
+            'creador_soporte',
+            'historialEstados',
+            'currentOrden', // Pasar el orden actual a la vista
+            'isClosed' // Pasar el orden actual a la vista
+        ));
     }
 
     // Actualizar un soporte existente en la base de datos
     public function update(Request $request, $id)
     {
-        $validatedData = $request->validate([
-            'horas_hombre' => 'nullable|numeric',
-            'uf' => 'nullable|numeric',
-            'fecha_estimada_entrega' => 'required|date',
-            'descripcion' => 'nullable|string|max:4000',
-            'solucion' => 'nullable|string|max:4000',
-            'celular' => 'nullable|string|max:12',
-            'email' => 'nullable|email|max:45',
-            'urgente' => 'sometimes|boolean',
-            'dificultad_soporte_id' => 'required|exists:dificultades_soporte,id',
-            'estado_soporte_id' => 'required|exists:estados_soporte,id',
-            'tipo_soporte_id' => 'required|exists:tipos_soporte,id',
-        ]);
+        $soporte = Soporte::findOrFail($id);
+        $estadoActual = EstadoSoporte::find($soporte->estado_soporte_id);
+        $isClosed = strtolower($estadoActual->isterminal);
+    
+        if ($isClosed) {
+            // Validar solo 'estado_soporte_id' y 'comentario'
+            $validatedData = $request->validate([
+                'estado_soporte_id' => 'required|exists:estado_soportes,id',
+                'comentario' => 'nullable|string|max:4000',
+            ]);
+        }
+        else{
+            $validatedData = $request->validate([
+                'horas_hombre' => 'nullable|numeric',
+                'uf' => 'nullable|numeric',
+                'fecha_estimada_entrega' => 'required|date',
+                'descripcion' => 'nullable|string|max:4000',
+                'solucion' => 'nullable|string|max:4000',
+                'celular' => 'nullable|string|max:12',
+                'email' => 'nullable|email|max:45',
+                'urgente' => 'sometimes|boolean',
+                'dificultad_soporte_id' => 'required|exists:dificultades_soporte,id',
+                'estado_soporte_id' => 'required|exists:estados_soporte,id',
+                'estado_cobranza_id' => 'required|exists:estados_cobranza,id',
+                'tipo_soporte_id' => 'required|exists:tipos_soporte,id',
+            ]);
+        }
 
         $soporte = Soporte::findOrFail($id);
 
@@ -232,7 +273,6 @@ class SoporteController
                 return !in_array($estado->id, $historialEstados);
             });
 
-            dump($estadosParaRegistrar);
             // Registrar los estados intermedios en el historial en orden
             foreach ($estadosParaRegistrar as $estado) {
                 HistorialEstado::create([
@@ -249,6 +289,7 @@ class SoporteController
             'id' => Str::uuid()->toString(),
             'soporte_id' => $soporte->id,
             'estado_soporte_id' => $soporte->estado_soporte_id,
+            'comentario' => $request->comentario,
             'usuario_id' => Auth::id(),
         ]);
 

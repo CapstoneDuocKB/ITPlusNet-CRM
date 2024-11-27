@@ -1,5 +1,3 @@
-<!-- resources/views/soportes/show.blade.php -->
-
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
@@ -11,52 +9,67 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <!-- Contenido principal -->
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg p-6">
-                <!-- Mostrar detalles del soporte -->
-                <div class="mb-4">
-                    <strong>Número Soporte:</strong> {{ $soporte->numero_soporte }}
+                <!-- Identificación del Soporte -->
+                <div class="mb-8 p-6 shadow-lg rounded-lg border border-gray-200">
+                    <h3 class="text-lg font-semibold mb-4">Identificación del Soporte</h3>
+                    <div class="grid grid-cols-4 gap-4 text-center">
+                        <div><strong>Número Soporte:</strong> {{ $soporte->numero_soporte }}</div>
+                        <div><strong>Tipo:</strong> {{ $soporte->tipoSoporte->nombre ?? 'N/A' }}</div>
+                        <div><strong>Estado:</strong> {{ $soporte->estadoSoporte->nombre ?? 'N/A' }}</div>
+                        <div><strong>Dificultad de Soporte:</strong> {{ $soporte->dificultadSoporte->nombre ?? 'N/A' }}</div>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <strong>Descripción:</strong> {{ $soporte->descripcion }}
+
+                <!-- Ubicación del Soporte -->
+                <div class="grid grid-cols-2 gap-4 mb-6 text-center">
+                    <div><strong>Bodega:</strong> {{ $soporte->bodega->nombre ?? 'N/A' }}</div>
+                    <div><strong>Caja:</strong> {{ $soporte->caja->nombre ?? 'N/A' }}</div>
                 </div>
-                <div class="mb-4">
-                    <strong>Solución:</strong> {{ $soporte->solucion }}
+                <!-- Descripción -->
+                <div class="mb-8 p-6 shadow-lg rounded-lg border border-gray-200 bg-gray-100">
+                    <h3 class="text-lg font-semibold mb-4">Descripción</h3>
+                    <div class="text-center overflow-hidden text-ellipsis max-h-48">
+                        {{ $soporte->descripcion }}
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <strong>Estado:</strong> {{ $soporte->estadoSoporte->nombre ?? 'N/A' }}
+
+
+                <!-- Datos de Contacto -->
+                <div class="mb-8 p-6 shadow-lg rounded-lg border border-gray-200">
+                    <h3 class="text-lg font-semibold mb-4">Datos de Contacto</h3>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div><strong>Celular:</strong> {{ $soporte->celular }}</div>
+                        <div><strong>Email:</strong> {{ $soporte->email }}</div>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <strong>Tipo:</strong> {{ $soporte->tipoSoporte->nombre ?? 'N/A' }}
+
+
+                <div class="gap-4 mb-6 text-center">
+                    <div><strong>Urgente:</strong> {{ $soporte->urgente ? 'Sí' : 'No' }}</div>
+                </div>  
+                <!-- Información de Urgencia -->
+                <div class="grid grid-cols-2 gap-4 mb-6 text-center">
+                    <div><strong>Horas Hombre:</strong> {{ $soporte->horas_hombre }}</div>
+                    <div><strong>UF:</strong> {{ $soporte->uf }}</div>
                 </div>
-                <div class="mb-4">
-                    <strong>Urgente:</strong> {{ $soporte->urgente ? 'Sí' : 'No' }}
+
+                <!-- Timestamps -->
+                <div class="mb-8 p-6 shadow-lg rounded-lg border border-gray-200">
+                    <h3 class="text-lg font-semibold mb-4">Timestamps</h3>
+                    <div class="grid grid-cols-2 gap-4 text-center">
+                        <div><strong>Creado en:</strong> {{ $soporte->created_at }}</div>
+                        <div><strong>Actualizado en:</strong> {{ $soporte->updated_at }}</div>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <strong>Horas Hombre:</strong> {{ $soporte->horas_hombre }}
+
+                <!-- Solución -->
+                <div class="mb-8 p-6 shadow-lg rounded-lg border border-gray-200 bg-gray-100">
+                    <h3 class="text-lg font-semibold mb-4">Solución</h3>
+                    <div class="text-center overflow-hidden text-ellipsis max-h-48">
+                        {{ $soporte->solucion }}
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <strong>UF:</strong> {{ $soporte->uf }}
-                </div>
-                <div class="mb-4">
-                    <strong>Celular:</strong> {{ $soporte->celular }}
-                </div>
-                <div class="mb-4">
-                    <strong>Email:</strong> {{ $soporte->email }}
-                </div>
-                <div class="mb-4">
-                    <strong>Bodega:</strong> {{ $soporte->bodega->nombre ?? 'N/A' }}
-                </div>
-                <div class="mb-4">
-                    <strong>Caja:</strong> {{ $soporte->caja->nombre ?? 'N/A' }}
-                </div>
-                <div class="mb-4">
-                    <strong>Dificultad de Soporte:</strong> {{ $soporte->dificultadSoporte->nombre ?? 'N/A' }}
-                </div>
-                <div class="mb-4">
-                    <strong>Creado en:</strong> {{ $soporte->created_at }}
-                </div>
-                <div class="mb-4">
-                    <strong>Actualizado en:</strong> {{ $soporte->updated_at }}
-                </div>
+
                 <!-- Botón de regreso -->
                 <a href="{{ route('soportes.index') }}" class="inline-flex items-center px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">
                     Atrás

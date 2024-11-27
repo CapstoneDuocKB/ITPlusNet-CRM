@@ -13,6 +13,7 @@ use App\Http\Controllers\RegionesController;
 use App\Http\Controllers\EstadosSoporteController;
 use App\Http\Controllers\TiposSoporteController;
 use App\Http\Controllers\DificultadesSoporteController;
+use App\Http\Controllers\DashboardController;
 
 use App\Http\Controllers\ChatGPTController;
 
@@ -70,9 +71,8 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
     
     // Ruta para el perfil del usuario (esto ya lo maneja Jetstream por defecto)
     Route::get('/profile', function () {

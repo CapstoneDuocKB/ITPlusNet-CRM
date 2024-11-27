@@ -57,7 +57,7 @@
                                 
                                         // Determinar las clases según el estado
                                         switch ($estadoNombre) {
-                                            case 'Creado':
+                                            case 'Pendiente':
                                                 $bgColor = 'bg-yellow-100';
                                                 $textColor = 'text-yellow-800';
                                                 break;
